@@ -1,0 +1,6 @@
+# 构建产物 / 运行时大件，不上传
+Source/**/bin/
+Source/**/obj/
+node_modules/
+runtime/
+UE_Data/
