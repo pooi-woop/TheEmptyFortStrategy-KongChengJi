@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  空城计 - 研究 Def
+  ===========================================
+  最低科技（Neolithic）、1000 点研究点数。
+  研究完成后，纪念碑任务只需砌好外墙即可视为"完工"（由 C# 补丁实现）。
+-->
+<Defs>
+
+  <!-- 专属研究页 -->
+  <ResearchTabDef>
+    <defName>KCJ_Tab_EmptyCity</defName>
+    <label>空城计</label>
+    <generalTitle>空城计研究</generalTitle>
+    <generalDescription>空城一计，虚张声势。研究"空城计"以解锁纪念碑任务的取巧造法。</generalDescription>
+  </ResearchTabDef>
+
+  <!-- 核心研究项目 -->
+  <ResearchProjectDef>
+    <defName>KCJ_EmptyCityStrategy</defName>
+    <label>空城计</label>
+    <tab>KCJ_Tab_EmptyCity</tab>
+    <description>深谙"虚则实之，实则虚之"。研习此计后，你深知只要把纪念碑的外墙砌得严严实实——哪怕里面空无一物——也能骗过委托者的眼睛。此后纪念碑任务仅需建造外墙即可视为完工（但仍需按约保护相应天数）。</description>
+    <baseCost>1000</baseCost>
+    <techLevel>Neolithic</techLevel>
+    <researchViewX>0.00</researchViewX>
+    <researchViewY>0.00</researchViewY>
+  </ResearchProjectDef>
+
+  <!-- 空城计败露时产生的关系惩罚事件（供 TryAffectGoodwillWith 引用） -->
+  <HistoryEventDef>
+    <defName>KCJ_EmptyCityExposed</defName>
+    <label>空城计败露</label>
+  </HistoryEventDef>
+
+</Defs>
