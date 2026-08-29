@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  空城计 (KongChengJi / Empty City Strategy) - About.xml
+  作者: PooiWoop
+  适用于 RimWorld 1.6
+
+  灵感来自三国演义"空城计"：诸葛孔明大开城门、独坐城楼抚琴退敌。
+  研究"空城计"后，纪念碑任务的完成条件大幅放水——你只需把纪念碑的
+  外墙（外围一圈墙）砌好，就算"建成"了，里面空不空都无所谓（滑稽）。
+  但该保护的那么多天，还得照常保护。
+-->
+<ModMetaData>
+  <!-- packageId: 全小写、无空格、全局唯一 -->
+  <packageId>pooiwoop.kongchengji</packageId>
+
+  <!-- 显示名称 -->
+  <name>空城计 (The Empty Fort Strategy)</name>
+
+  <!-- 作者名 -->
+  <author>PooiWoop</author>
+
+  <!-- 支持的游戏版本 -->
+  <supportedVersions>
+    <li>1.6</li>
+  </supportedVersions>
+
+  <!-- 依赖：Harmony（C# mod 必需） + Royalty DLC（纪念碑任务属于皇家库） -->
+  <modDependencies>
+    <li>
+      <packageId>brrainz.harmony</packageId>
+      <displayName>Harmony</displayName>
+      <steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
+    </li>
+    <li>
+      <packageId>ludeon.rimworld.royalty</packageId>
+      <displayName>RimWorld - Royalty</displayName>
+    </li>
+  </modDependencies>
+
+  <!-- Mod 描述 -->
+  <description>灵感来自三国"空城计"。在最低科技（原石器时代）以 1000 点数研究"空城计"后，接到建造纪念碑的任务时，你只需把纪念碑的外墙（外围一圈）砌好即可视为"完工"，成功触发任务后续流程——但需要保护的天数依然照常。城内空空如也？孔明笑了：虚则实之，实则虚之。</description>
+</ModMetaData>
