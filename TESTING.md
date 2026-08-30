@@ -7,10 +7,11 @@
 ## 1. 测试前准备
 
 1. **启用 Mod 并重启游戏**，确认无红字、无报错。
-2. **研究"空城计"科技**（Neolithic / 1000 点）。
+2. **研究"空城计"科技**（Neolithic / 默认 200 点，可在 Mod 设置中改为 0~1000）。
    - 未研究则该 Mod 的按钮不出现。
+   - 设置"研究点数"为 0 时，该研究默认已完成、按钮直接可用。
    - 可在开发菜单 `General → Finish all research` 一把解锁，最快。
-3. **（可选）在设置里把发现概率调高**：选项 → Mod 设置 → 空城计 → 把发现概率拖满，便于快速验证败露逻辑。
+3. **（可选）在设置里把发现概率调高**：选项 → Mod 设置 → 空城计 → 把发现概率拖满，便于快速验证败露逻辑；调到 0% 则永不被发现。
 
 ## 2. 如何触发纪念碑任务
 
@@ -47,8 +48,22 @@
 - **不影响原版**：不开启空城计时，正常建满全图 → 任务正常成功、无惩罚。
 - **存档/读档**：开启空城计后存档→读档，状态与原蓝图应保持。
 
+## 4.1 新增设置验证
+
+| 功能 | 操作 | 预期 |
+|------|------|------|
+| 研究点数 | 设置里改 0 | 研究列表"空城计"直接完成，按钮可用 |
+| 研究点数 | 设置里改 200（或其它值） | 研究所需点数随之变化 |
+| 被发现概率 0% | 设置里拉到 0%，开空城计并把任务保护期走完 | 永不被发现、任务成功 |
+| 提高出现概率 | 勾选"提高纪念碑任务出现概率"并设放大倍数 | Generate Quest 时 BuildMonument 出现频率显著上升；取消勾选恢复正常 |
+| 文化仪式刷新（需 Ideology） | 在"编辑文化"里把"空城计-宣传"效果选到某场仪式，概率调高 | 该仪式以"良好及以上"结束后，刷新出新的纪念碑任务 |
+| 文化仪式未选效果 | 不给任何仪式选"空城计-宣传"效果 | 仪式结束后不刷新纪念碑任务（该效果为可选项，默认可用但按需选用） |
+| 无 Ideology DLC | 仅打包含 Royalty 或基础环境 | 不影响研究/发现/概率加成等其余功能，仪式选项不生效但不报红字 |
+
 ## 5. 关键文件参考
 
 - 蓝图按钮 / 外墙提取 / 每日发现判定 / 任务失败：`Source/PooiKongChengJi/Main.cs`（Harmony 补丁 + GameComponent）。
-- 研究门槛：`Defs/ResearchDefs.xml`（`KCJ_EmptyCityStrategy`）。
+- 研究门槛：`Defs/ResearchDefs.xml`（`KCJ_EmptyCityStrategy`，默认 200 点）。
 - 关系惩罚事件：`KCJ_EmptyCityExposed`（`Defs/ResearchDefs.xml`）。
+- 研究点数 / 纪念碑权重 / 文化仪式刷新：`KongChengJiHelpers` 与 `RitualOutcomeEffectWorker_KongChengJiMonument`（`Source/PooiKongChengJi/Main.cs`）。
+- 文化仪式效果 Def：`Defs/RitualOutcomeEffects.xml`（`KCJ_MonumentRefreshEffect`）。

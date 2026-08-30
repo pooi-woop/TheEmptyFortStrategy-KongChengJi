@@ -21,7 +21,8 @@
     <label>空城计</label>
     <tab>KCJ_Tab_EmptyCity</tab>
     <description>深谙"虚则实之，实则虚之"。研习此计后，你深知只要把纪念碑的外墙砌得严严实实——哪怕里面空无一物——也能骗过委托者的眼睛。此后纪念碑任务仅需建造外墙即可视为完工（但仍需按约保护相应天数）。</description>
-    <baseCost>1000</baseCost>
+    <!-- 默认 200 点；可在 Mod 设置中改为 0~1000（0 表示默认拥有），实际成本由 C# 依据设置动态写入 -->
+    <baseCost>200</baseCost>
     <techLevel>Neolithic</techLevel>
     <researchViewX>0.00</researchViewX>
     <researchViewY>0.00</researchViewY>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  空城计 - 文化仪式效果（RitualOutcomeEffectDef）
+  ==============================================================
+  这是一个真正的、可在游戏内"编辑文化→仪式效果选择"中看到的可选项，名为"空城计-宣传"。
+  把它选为某场仪式的效果后：当该仪式以"良好及以上"的质量结束时，
+  会按 Mod 设置里的概率刷新一个新纪念碑（建造并保护）任务（概率默认 100%，可选 0% ~ 100%）。
+  该概率是"仪式效果触发"的概率，与平时纪念碑任务的出现概率互不影响。
+
+  兼容性：未安装 Ideology/文化 DLC 时，RitualOutcomeEffectDef 只是静静地躺在 Def 数据库里
+  （该 Def 类型始终存在），没有任何仪式引用它，因而透明生效、不影响其它功能，也不报错。
+  需要 Ideology 才能把该效果选到仪式上。
+-->
+<Defs>
+
+  <RitualOutcomeEffectDef>
+    <defName>KCJ_MonumentRefreshEffect</defName>
+    <label>空城计-宣传</label>
+    <description>在"编辑文化"中把该效果选到某场仪式上后，当这场仪式以"良好及以上"的质量结束时，按 Mod 设置里的可调概率（默认 100%）刷新一座新的纪念碑建造任务——宣传作势，委托方更加青睐。</description>
+    <workerClass>PooiKongChengJi.RitualOutcomeEffectWorker_KongChengJiMonument</workerClass>
+    <givesDevelopmentPoints>false</givesDevelopmentPoints>
+    <startingQuality>0.3</startingQuality>
+    <minQuality>0</minQuality>
+    <maxQuality>1</maxQuality>
+    <comps>
+      <li Class="RitualOutcomeComp_ParticipantCount">
+        <label>participant count</label>
+        <curve>
+          <points>
+            <li>(1,  0.15)</li>
+            <li>(5,  0.35)</li>
+            <li>(10, 0.5)</li>
+            <li>(17, 0.6)</li>
+          </points>
+        </curve>
+      </li>
+      <li Class="RitualOutcomeComp_RoomStat">
+        <label>room impressiveness</label>
+        <statDef>Impressiveness</statDef>
+        <curve>
+          <points>
+            <li>0,   0</li>
+            <li>50,  0.1</li>
+            <li>120, 0.2</li>
+          </points>
+        </curve>
+      </li>
+    </comps>
+    <outcomeChances>
+      <li>
+        <label>Terrible</label>
+        <description>The ritual went terribly, and the patron is not moved. No monument commission.</description>
+        <chance>0.05</chance>
+        <positivityIndex>-2</positivityIndex>
+      </li>
+      <li>
+        <label>Unimpressive</label>
+        <description>The ritual was unimpressive. The patron was not swayed to send a new monument.</description>
+        <chance>0.15</chance>
+        <positivityIndex>-1</positivityIndex>
+      </li>
+      <li>
+        <label>Encouraging</label>
+        <description>The ritual went well. The patron was greatly impressed, and may well commission a new monument.</description>
+        <chance>0.6</chance>
+        <positivityIndex>1</positivityIndex>
+      </li>
+      <li>
+        <label>Inspirational</label>
+        <description>The ritual was inspirational. The patron is deeply moved, and is very likely to commission a new monument.</description>
+        <chance>0.2</chance>
+        <positivityIndex>2</positivityIndex>
+      </li>
+    </outcomeChances>
+  </RitualOutcomeEffectDef>
+
+</Defs>
