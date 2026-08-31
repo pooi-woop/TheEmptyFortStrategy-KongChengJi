@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModSync>
+  <version>1.1.0</version>
+  <updateNotes>
+    1.0: 空城计模式、败露判定、关系惩罚、延迟袭击
+    1.1.0: 新增顶罪仪式、宣传仪式及相关设置、多语言本地化；修复外墙提取不全
+  </updateNotes>
+</ModSync>

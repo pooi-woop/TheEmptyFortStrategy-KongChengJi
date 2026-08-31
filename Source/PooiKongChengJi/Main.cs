@@ -245,7 +245,7 @@ namespace PooiKongChengJi
         private Vector2 infoScrollPosition;
         private Vector2 pawnScrollPosition;
 
-        public override Vector2 InitialSize => new Vector2(480f, 480f);
+        public override Vector2 InitialSize => new Vector2(760f, 560f);
 
         public Dialog_BlameShiftConfirm(ExposureEvent exposure)
         {
@@ -273,37 +273,76 @@ namespace PooiKongChengJi
 
         public override void DoWindowContents(Rect inRect)
         {
+            BlameShiftAction action = BlameShiftDialogUI.DrawContents(inRect, candidates, ref selectedPawn, ref infoScrollPosition, ref pawnScrollPosition);
+            if (action == BlameShiftAction.Confirm)
+            {
+                comp.TriggerBlameShiftFromGizmo(ev, selectedPawn);
+                Close();
+            }
+            else if (action == BlameShiftAction.Cancel)
+            {
+                Close();
+            }
+        }
+    }
+
+    /// <summary>顶罪仪式界面的操作结果。</summary>
+    internal enum BlameShiftAction
+    {
+        None,
+        Confirm,
+        Cancel
+    }
+
+    /// <summary>
+    /// 顶罪仪式共用 UI：左侧说明文字占 50%，右侧小人选择列表（左右布局，同原版文化仪式）。
+    /// 返回是否点击了“确认/取消”。
+    /// </summary>
+    internal static class BlameShiftDialogUI
+    {
+        private const float TitleHeight = 30f;
+        private const float EntryHeight = 40f;
+        private const float IconSize = 30f;
+        private const float BottomHeight = 36f;
+
+        internal static BlameShiftAction DrawContents(Rect inRect, List<Pawn> candidates, ref Pawn selectedPawn, ref Vector2 infoScroll, ref Vector2 pawnScroll)
+        {
             Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(inRect.x, inRect.y, inRect.width, 30f), "KCJ_BlameShift_Confirm_Title".Translate());
+            Widgets.Label(new Rect(inRect.x, inRect.y, inRect.width, TitleHeight), "KCJ_BlameShift_Confirm_Title".Translate());
             Text.Font = GameFont.Small;
 
-            float y = inRect.y + 35f;
-            // 说明文字可滚动，避免文本溢出
+            // 左右两栏：左栏说明文字占 50%，右栏选择小人
+            float topY = inRect.y + TitleHeight + 10f;
+            float contentBottom = inRect.yMax - BottomHeight - 10f;
+            float contentH = contentBottom - topY;
+            float gap = 16f;
+            float leftW = (inRect.width - gap) * 0.5f;
+            float rightX = inRect.x + leftW + gap;
+            float rightW = inRect.width - leftW - gap;
+
+            // ---------- 左栏：说明文字（可滚动） ----------
             string infoText = "KCJ_BlameShift_Confirm_Text".Translate();
-            float infoTextHeight = Text.CalcHeight(infoText, inRect.width - 30f);
-            Rect infoOutRect = new Rect(inRect.x, y, inRect.width - 4f, 60f);
+            float infoTextHeight = Text.CalcHeight(infoText, leftW - 16f);
+            Rect infoOutRect = new Rect(inRect.x, topY, leftW, contentH);
             Rect infoViewRect = new Rect(0f, 0f, infoOutRect.width - 16f, infoTextHeight);
-            Widgets.BeginScrollView(infoOutRect, ref infoScrollPosition, infoViewRect);
+            Widgets.BeginScrollView(infoOutRect, ref infoScroll, infoViewRect);
             Widgets.Label(new Rect(0f, 0f, infoViewRect.width, infoTextHeight), infoText);
             Widgets.EndScrollView();
 
-            y += 64f;
-            Widgets.Label(new Rect(inRect.x, y, inRect.width, 22f), "KCJ_BlameShift_Select_Pawn".Translate());
+            // ---------- 右栏：选择小人 ----------
+            Widgets.Label(new Rect(rightX, topY, rightW, 22f), "KCJ_BlameShift_Select_Pawn".Translate());
+            float listY = topY + 26f;
+            float listHeight = contentBottom - listY;
+            float totalHeight = candidates.Count * EntryHeight;
 
-            y += 24f;
-            float listHeight = inRect.yMax - 40f - y - 10f;
-            const float entryHeight = 40f;
-            const float iconSize = 30f;
-            float totalHeight = candidates.Count * entryHeight;
-
-            Rect outRect = new Rect(inRect.x, y, inRect.width, listHeight);
+            Rect outRect = new Rect(rightX, listY, rightW, listHeight);
             Rect viewRect = new Rect(0f, 0f, outRect.width - 16f, totalHeight);
-            Widgets.BeginScrollView(outRect, ref pawnScrollPosition, viewRect);
+            Widgets.BeginScrollView(outRect, ref pawnScroll, viewRect);
 
             for (int i = 0; i < candidates.Count; i++)
             {
                 Pawn pawn = candidates[i];
-                Rect entryRect = new Rect(0f, i * entryHeight, viewRect.width, entryHeight - 2f);
+                Rect entryRect = new Rect(0f, i * EntryHeight, viewRect.width, EntryHeight - 2f);
 
                 bool isSelected = pawn == selectedPawn;
                 Widgets.DrawHighlightIfMouseover(entryRect);
@@ -313,12 +352,12 @@ namespace PooiKongChengJi
                 }
 
                 // 小人图标
-                Rect iconRect = new Rect(4f, i * entryHeight + 5f, iconSize, iconSize);
+                Rect iconRect = new Rect(4f, i * EntryHeight + 5f, IconSize, IconSize);
                 Widgets.ThingIcon(iconRect, pawn);
 
                 string roleLabel = pawn.IsSlave ? "KCJ_Role_Intern".Translate() : "KCJ_Role_Employee".Translate();
                 string label = pawn.NameShortColored + "  (" + roleLabel + ")";
-                Widgets.Label(new Rect(iconRect.xMax + 6f, i * entryHeight + 5f, viewRect.width - iconSize - 16f, entryHeight - 6f), label);
+                Widgets.Label(new Rect(iconRect.xMax + 6f, i * EntryHeight + 5f, viewRect.width - IconSize - 16f, EntryHeight - 6f), label);
 
                 if (Widgets.ButtonInvisible(entryRect))
                 {
@@ -328,17 +367,17 @@ namespace PooiKongChengJi
 
             Widgets.EndScrollView();
 
-            // 按钮
-            float bY = inRect.yMax - 40f;
-            if (selectedPawn != null && Widgets.ButtonText(new Rect(inRect.x, bY, 140f, 34f), "KCJ_BlameShift_Confirm_Button".Translate()))
+            // ---------- 底部按钮 ----------
+            float bY = inRect.yMax - BottomHeight;
+            if (selectedPawn != null && Widgets.ButtonText(new Rect(inRect.x, bY, 140f, 30f), "KCJ_BlameShift_Confirm_Button".Translate()))
             {
-                comp.TriggerBlameShiftFromGizmo(ev, selectedPawn);
-                Close();
+                return BlameShiftAction.Confirm;
             }
-            if (Widgets.ButtonText(new Rect(inRect.xMax - 140f, bY, 140f, 34f), "KCJ_Confirm_Cancel".Translate()))
+            if (Widgets.ButtonText(new Rect(inRect.xMax - 140f, bY, 140f, 30f), "KCJ_Confirm_Cancel".Translate()))
             {
-                Close();
+                return BlameShiftAction.Cancel;
             }
+            return BlameShiftAction.None;
         }
     }
 
@@ -356,7 +395,7 @@ namespace PooiKongChengJi
         private Vector2 infoScrollPosition;
         private Vector2 pawnScrollPosition;
 
-        public override Vector2 InitialSize => new Vector2(480f, 480f);
+        public override Vector2 InitialSize => new Vector2(760f, 560f);
 
         public Dialog_BlameShiftRitualSelection(ExposureEvent exposure, List<Pawn> participants)
         {
@@ -384,64 +423,8 @@ namespace PooiKongChengJi
 
         public override void DoWindowContents(Rect inRect)
         {
-            Text.Font = GameFont.Medium;
-            Widgets.Label(new Rect(inRect.x, inRect.y, inRect.width, 30f), "KCJ_BlameShift_Confirm_Title".Translate());
-            Text.Font = GameFont.Small;
-
-            float y = inRect.y + 35f;
-            // 说明文字可滚动，避免文本溢出
-            string infoText = "KCJ_BlameShift_Confirm_Text".Translate();
-            float infoTextHeight = Text.CalcHeight(infoText, inRect.width - 30f);
-            Rect infoOutRect = new Rect(inRect.x, y, inRect.width - 4f, 60f);
-            Rect infoViewRect = new Rect(0f, 0f, infoOutRect.width - 16f, infoTextHeight);
-            Widgets.BeginScrollView(infoOutRect, ref infoScrollPosition, infoViewRect);
-            Widgets.Label(new Rect(0f, 0f, infoViewRect.width, infoTextHeight), infoText);
-            Widgets.EndScrollView();
-
-            y += 64f;
-            Widgets.Label(new Rect(inRect.x, y, inRect.width, 22f), "KCJ_BlameShift_Select_Pawn".Translate());
-
-            y += 24f;
-            float listHeight = inRect.yMax - 40f - y - 10f;
-            const float entryHeight = 40f;
-            const float iconSize = 30f;
-            float totalHeight = candidates.Count * entryHeight;
-
-            Rect outRect = new Rect(inRect.x, y, inRect.width, listHeight);
-            Rect viewRect = new Rect(0f, 0f, outRect.width - 16f, totalHeight);
-            Widgets.BeginScrollView(outRect, ref pawnScrollPosition, viewRect);
-
-            for (int i = 0; i < candidates.Count; i++)
-            {
-                Pawn pawn = candidates[i];
-                Rect entryRect = new Rect(0f, i * entryHeight, viewRect.width, entryHeight - 2f);
-
-                bool isSelected = pawn == selectedPawn;
-                Widgets.DrawHighlightIfMouseover(entryRect);
-                if (isSelected)
-                {
-                    Widgets.DrawBox(entryRect, 2);
-                }
-
-                // 小人图标
-                Rect iconRect = new Rect(4f, i * entryHeight + 5f, iconSize, iconSize);
-                Widgets.ThingIcon(iconRect, pawn);
-
-                string roleLabel = pawn.IsSlave ? "KCJ_Role_Intern".Translate() : "KCJ_Role_Employee".Translate();
-                string label = pawn.NameShortColored + "  (" + roleLabel + ")";
-                Widgets.Label(new Rect(iconRect.xMax + 6f, i * entryHeight + 5f, viewRect.width - iconSize - 16f, entryHeight - 6f), label);
-
-                if (Widgets.ButtonInvisible(entryRect))
-                {
-                    selectedPawn = pawn;
-                }
-            }
-
-            Widgets.EndScrollView();
-
-            // 按钮
-            float bY = inRect.yMax - 40f;
-            if (selectedPawn != null && Widgets.ButtonText(new Rect(inRect.x, bY, 140f, 34f), "KCJ_BlameShift_Confirm_Button".Translate()))
+            BlameShiftAction action = BlameShiftDialogUI.DrawContents(inRect, candidates, ref selectedPawn, ref infoScrollPosition, ref pawnScrollPosition);
+            if (action == BlameShiftAction.Confirm)
             {
                 // 弹窗自行执行放逐和顶罪效果
                 string roleLabel = selectedPawn.IsSlave ? "KCJ_Role_Intern".Translate() : "KCJ_Role_Employee".Translate();
@@ -460,7 +443,7 @@ namespace PooiKongChengJi
 
                 Close();
             }
-            if (Widgets.ButtonText(new Rect(inRect.xMax - 140f, bY, 140f, 34f), "KCJ_Confirm_Cancel".Translate()))
+            else if (action == BlameShiftAction.Cancel)
             {
                 Close();
             }
@@ -564,7 +547,7 @@ namespace PooiKongChengJi
         public List<MarkerState> states = new List<MarkerState>();
         public List<ExposureEvent> exposures = new List<ExposureEvent>();
         public bool researchCompletedQuestDispatched; // 研究完成时是否已触发纪念碑任务
-        public int lastPropagandaTick = -60000; // 上次宣传仪式触发时的 tick（初始化-1天，让玩家一开始就能用）
+        public int lastPropagandaTick = int.MinValue; // 上次宣传仪式触发时的 tick（初始化"从未触发"，开局即可用，避免一上来就进入冷却）
 
         public const int TicksPerDay = 60000;
         // 4小时 = 10000 ticks (1 in-game hour = 2500 ticks)
@@ -598,7 +581,7 @@ namespace PooiKongChengJi
                 exposures = new List<ExposureEvent>();
             }
             Scribe_Values.Look(ref researchCompletedQuestDispatched, "researchCompletedQuestDispatched", false);
-            Scribe_Values.Look(ref lastPropagandaTick, "lastPropagandaTick", -60000);
+            Scribe_Values.Look(ref lastPropagandaTick, "lastPropagandaTick", int.MinValue);
             Scribe_Deep.Look(ref activeCeremony, "activeCeremony");
             Scribe_References.Look(ref propagandaLord, "propagandaLord");
         }
@@ -1805,7 +1788,17 @@ namespace PooiKongChengJi
                 Pawn pawn = lord.ownedPawns[i];
                 if (pawn != null && !pawn.Destroyed)
                 {
-                    pawn.mindState.duty = new PawnDuty(DutyDefOf.Spectate, spot);
+                    // 与 Vanilla LordToil_Ritual 一致：让参与者聚集在纪念碑周围围观仪式，
+                    // 并通过 spectateRect/spectateDistance 锚定在固定范围内，再强制打断他们手头的活。
+                    PawnDuty duty = new PawnDuty(DutyDefOf.Spectate, spot);
+                    duty.spectateRect = CellRect.CenteredOn(spot, 0);
+                    duty.spectateDistance = new IntRange(2, 3);
+                    duty.spectateRectAllowedSides = SpectateRectSide.All;
+                    duty.spectateRectPreferredSide = SpectateRectSide.Down;
+
+                    pawn.mindState.duty = duty;
+                    pawn.mindState.priorityWork.ClearPrioritizedWorkAndJobQueue();
+                    pawn.jobs?.CheckForJobOverride();
                 }
             }
         }
@@ -2131,31 +2124,24 @@ namespace PooiKongChengJi
 
                 Widgets.DrawHighlightIfMouseover(entryRect);
 
-                bool isSelected = selectedIds.Contains(pawn.thingIDNumber);
-                string roleLabel = pawn.IsSlave ? "KCJ_Role_Intern".Translate() : "KCJ_Role_Employee".Translate();
-
                 // 小人图标
                 Rect iconRect = new Rect(4f, i * entryHeight + 5f, iconSize, iconSize);
                 Widgets.ThingIcon(iconRect, pawn);
 
-                // 复选框
+                // 复选框（作为唯一切换入口，避免与整行按钮双重触发导致无法打钩）
+                bool isSelected = selectedIds.Contains(pawn.thingIDNumber);
                 Rect checkRect = new Rect(iconRect.xMax + 4f, i * entryHeight + 5f, 24f, entryHeight - 10f);
-                bool checkState = isSelected;
-                Widgets.Checkbox(checkRect.position, ref checkState, 24f);
-                if (checkState != isSelected)
+                bool modified = isSelected;
+                Widgets.Checkbox(checkRect.position, ref modified, 24f);
+                if (modified != isSelected)
                 {
-                    if (checkState) selectedIds.Add(pawn.thingIDNumber);
+                    if (modified) selectedIds.Add(pawn.thingIDNumber);
                     else selectedIds.Remove(pawn.thingIDNumber);
                 }
 
+                string roleLabel = pawn.IsSlave ? "KCJ_Role_Intern".Translate() : "KCJ_Role_Employee".Translate();
                 string label = pawn.NameShortColored + "  (" + roleLabel + ")";
                 Widgets.Label(new Rect(checkRect.xMax + 4f, i * entryHeight + 5f, viewRect.width - checkRect.xMax - 4f, entryHeight - 6f), label);
-
-                if (Widgets.ButtonInvisible(entryRect))
-                {
-                    if (isSelected) selectedIds.Remove(pawn.thingIDNumber);
-                    else selectedIds.Add(pawn.thingIDNumber);
-                }
             }
 
             Widgets.EndScrollView();
