@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <KCJ_BlameShiftEffect.label>Empty Fort — Blame Shift</KCJ_BlameShiftEffect.label>
+  <KCJ_BlameShiftEffect.description>If the "Empty Fort" is exposed, hold this ritual within 4 hours to stop the retaliatory raid. Holding it within 24 hours can still restore 70% (adjustable) of the exposure relation penalty. Banish a "Full Employee" (colonist) or "Intern" (slave) during the ritual.</KCJ_BlameShiftEffect.description>
+</LanguageData>

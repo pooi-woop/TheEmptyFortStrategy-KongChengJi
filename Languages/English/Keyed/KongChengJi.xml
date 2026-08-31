@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <!-- Gizmo button -->
+  <KCJ_Gizmo_Label>Empty Fort Strategy</KCJ_Gizmo_Label>
+  <KCJ_Gizmo_Desc>When enabled, the monument blueprint will keep only the outer walls (perimeter). The interior will be cleared, and you only need to build the outer walls for the monument to be considered complete.\n\nNote: Once completed in Empty Fort mode, there is a daily chance of discovery during the protection period. If discovered, the quest will fail and relations with the quest-giving faction will deteriorate. Click again to disable and restore the full blueprint.</KCJ_Gizmo_Desc>
+
+  <!-- Enable/Disable messages -->
+  <KCJ_Enabled_Message>Empty Fort Strategy activated: the monument only needs its outer walls to be considered complete.</KCJ_Enabled_Message>
+  <KCJ_Disabled_Message>Empty Fort Strategy deactivated: full blueprint restored.</KCJ_Disabled_Message>
+
+  <!-- Confirmation dialog -->
+  <KCJ_Confirm_Title>Empty Fort Strategy</KCJ_Confirm_Title>
+  <KCJ_Confirm_Text>With this strategy, the monument only needs to build those solid outer walls to be considered "complete" — the inside can be as empty as a drum.\n\nBut you can't fool the heavens forever: during the protection period after completion, there is a daily chance of being "discovered." Once exposed, the quest will fail immediately and relations with the commissioning faction will deteriorate.\n\nConfirm activation of Empty Fort mode?</KCJ_Confirm_Text>
+  <KCJ_Confirm_Button>Activate Empty Fort</KCJ_Confirm_Button>
+  <KCJ_Confirm_Cancel>Cancel</KCJ_Confirm_Cancel>
+
+  <!-- Exposed dialog -->
+  <KCJ_Exposed_Title>Empty Fort · Exposed</KCJ_Exposed_Title>
+  <KCJ_Exposed_Text>Deception and truth, finally seen through.\n\nThe commissioning faction has seen through your empty fort. The monument quest has been judged a failure. They have taken offense: your relations have been reduced by {0}.\n\nThe faction's penalties will be triggered in 4 hours.\n\nYou have a 4-hour window to hold the "Empty Fort — Blame Shift" ritual to stop the raid. Holding it within 24 hours can still reduce the relation penalty.</KCJ_Exposed_Text>
+  <KCJ_Exposed_Button>Dismiss</KCJ_Exposed_Button>
+
+  <!-- Exposed messages -->
+  <KCJ_Exposed_Message>Empty Fort Strategy exposed!{0} Quest failed.\nThe faction's penalties will be triggered in 4 hours. Hold the "Empty Fort — Blame Shift" ritual within 4 hours to stop the raid, or within 24 hours to reduce the relation penalty.</KCJ_Exposed_Message>
+
+  <!-- Warning message (countdown) -->
+  <KCJ_Warning_Message>Empty Fort exposure warning: the faction's penalties will be triggered in {0}. Hold the "Empty Fort — Blame Shift" ritual to banish a pawn to calm their anger.</KCJ_Warning_Message>
+
+  <!-- Time format strings -->
+  <KCJ_Time_HoursMinutes>{0}h {1}m</KCJ_Time_HoursMinutes>
+  <KCJ_Time_Minutes>{0}min</KCJ_Time_Minutes>
+
+  <!-- Penalty letter -->
+  <KCJ_Penalty_Letter_Title>Empty Fort Exposed · Penalty</KCJ_Penalty_Letter_Title>
+  <KCJ_Penalty_Letter_Text>The commissioning faction's penalty has arrived!\n\nIf you had held the "Empty Fort — Blame Shift" ritual within 4 hours, this raid could have been stopped. Holding it within 24 hours could have at least reduced the relation penalty.</KCJ_Penalty_Letter_Text>
+
+  <!-- Warning letter -->
+  <KCJ_Warning_Letter_Title>Empty Fort Exposed · Penalty Warning</KCJ_Warning_Letter_Title>
+  <KCJ_Warning_Letter_Text>The Empty Fort has been seen through! The faction's penalties will be triggered in 4 hours (if the original quest included a raid penalty, a raid will occur).\n\nYou have a 4-hour window to hold the "Empty Fort — Blame Shift" ritual to stop the raid. Holding it within 24 hours can still restore {0}% of the relation penalty.\n\nSelect the exposed monument and click the "Blame Shift" button, or use the cultural ritual to banish a "Full Employee" (colonist) or "Intern" (slave) to perform the blame shift.\n\nYou may also choose not to hold the ritual and face the consequences.</KCJ_Warning_Letter_Text>
+
+  <!-- Blame shift Gizmo (auto-trigger, no culture setup needed) -->
+  <KCJ_BlameShift_Gizmo_Label>Blame Shift</KCJ_BlameShift_Gizmo_Label>
+  <KCJ_BlameShift_Gizmo_Desc>After the Empty Fort is exposed, hold a blame shift ritual to banish a "Full Employee" (colonist) or "Intern" (slave). Within 4 hours, this can prevent the faction's attack. Within 24 hours, it can still restore part of the relation penalty.\n\nNo cultural meme or extra setup required — available as soon as the Empty Fort is seen through.</KCJ_BlameShift_Gizmo_Desc>
+
+  <!-- Blame shift confirmation dialog -->
+  <KCJ_BlameShift_Confirm_Title>Empty Fort · Blame Shift</KCJ_BlameShift_Confirm_Title>
+  <KCJ_BlameShift_Confirm_Text>The Empty Fort has been seen through! You will banish a pawn to take the blame.\n\nAfter banishment, the pawn will leave your colony forever. If done within 4 hours, it can stop the faction's attack. Within 24 hours, it can still restore part of the relation penalty.</KCJ_BlameShift_Confirm_Text>
+  <KCJ_BlameShift_Confirm_Pawn>Scapegoat: {0}\nRole: {1}\n\n{2}</KCJ_BlameShift_Confirm_Pawn>
+  <KCJ_BlameShift_Confirm_Button>Banish Scapegoat</KCJ_BlameShift_Confirm_Button>
+  <KCJ_BlameShift_Select_Pawn>Select a pawn to be the scapegoat:</KCJ_BlameShift_Select_Pawn>
+
+  <!-- Propaganda Gizmo (auto-displayed, no culture setup needed) -->
+  <KCJ_Propaganda_Gizmo_Label>Propaganda</KCJ_Propaganda_Gizmo_Label>
+  <KCJ_Propaganda_Gizmo_Desc>Hold a propaganda ceremony lasting {0} hours to attract attention.\n\nAfter the ceremony ends, the quality is calculated based on participants and surroundings. Good or above quality will refresh a new monument (build & protect) quest.\n\nNo cultural meme or extra setup required — available once the monument is completed.\n\nCooldown: {1} day(s).</KCJ_Propaganda_Gizmo_Desc>
+  <KCJ_Propaganda_Gizmo_Desc_Running>Propaganda ceremony in progress ({0}%).</KCJ_Propaganda_Gizmo_Desc_Running>
+  <KCJ_Propaganda_Gizmo_Desc_Cooldown>Propaganda on cooldown — {0} hours remaining.\n\nCooldown: {1} day(s).</KCJ_Propaganda_Gizmo_Desc_Cooldown>
+  <KCJ_Propaganda_Cooldown_Message>Propaganda is on cooldown ({0} hours remaining).</KCJ_Propaganda_Cooldown_Message>
+  <KCJ_Propaganda_AlreadyRunning>Propaganda ceremony is already in progress. Please wait for it to finish.</KCJ_Propaganda_AlreadyRunning>
+
+  <!-- Propaganda ceremony dialog -->
+  <KCJ_Ceremony_Dialog_Title>Empty Fort · Propaganda Ceremony</KCJ_Ceremony_Dialog_Title>
+  <KCJ_Ceremony_Dialog_Info>Hold a propaganda ceremony lasting {0} hours to attract public attention.\n\nAfter the ceremony ends, quality is calculated based on participant count and room impressiveness. Higher quality means a better monument quest from the patron.</KCJ_Ceremony_Dialog_Info>
+  <KCJ_Ceremony_Dialog_Quality>Participants: {0} | Estimated quality: {1}%</KCJ_Ceremony_Dialog_Quality>
+  <KCJ_Ceremony_Dialog_Participants>Select participants (click to toggle):</KCJ_Ceremony_Dialog_Participants>
+  <KCJ_Ceremony_Start_Button>Start Ceremony</KCJ_Ceremony_Start_Button>
+  <KCJ_Ceremony_NoParticipants>Select at least one participant</KCJ_Ceremony_NoParticipants>
+
+  <!-- Propaganda ceremony start notification -->
+  <KCJ_Ceremony_Start_Title>Empty Fort · Propaganda Started</KCJ_Ceremony_Start_Title>
+  <KCJ_Ceremony_Start_Text>The propaganda ceremony has begun! It will last {0} hours.\n\nAfter the ceremony ends, the quality will determine the monument quest offered by the patron.</KCJ_Ceremony_Start_Text>
+  <KCJ_Ceremony_Start_Message>Propaganda ceremony started! Lasting {0} hours.</KCJ_Ceremony_Start_Message>
+
+  <!-- Propaganda ceremony end notification (like vanilla ritual, quality determines which outcome) -->
+  <KCJ_Ceremony_Complete_Title>Empty Fort · Propaganda Complete</KCJ_Ceremony_Complete_Title>
+  <KCJ_Ceremony_Complete_Text>The propaganda ceremony has concluded. Quality: {0}%.\n\nThe patron was impressed by your publicity and has sent a new monument blueprint.</KCJ_Ceremony_Complete_Text>
+
+  <!-- Blame shift success letter -->
+  <KCJ_BlameShift_Letter_Title>Empty Fort · Blame Shift Successful</KCJ_BlameShift_Letter_Title>
+  <KCJ_BlameShift_Letter_Text>The ritual is complete! A "Full Employee" has been banished, taking responsibility for the failed Empty Fort.\n\nRelations restored by {0} points ({1}% of the original penalty).\n\n{2}</KCJ_BlameShift_Letter_Text>
+
+  <!-- Blame shift detail letter -->
+  <KCJ_BlameShift_Detail_Title>Empty Fort · Blame Shift</KCJ_BlameShift_Detail_Title>
+  <KCJ_BlameShift_Detail_Text>During the ritual, {0} was banished as a "{1}", taking responsibility for the failed Empty Fort.\n\n{2}</KCJ_BlameShift_Detail_Text>
+
+  <!-- Blame shift messages -->
+  <KCJ_BlameShift_NoEvent>There is no active Empty Fort exposure event to atone for.</KCJ_BlameShift_NoEvent>
+  <KCJ_BlameShift_NoParticipant>The "Empty Fort — Blame Shift" ritual requires at least one colonist or slave as a participant.</KCJ_BlameShift_NoParticipant>
+  <KCJ_BlameShift_Banish>{0} has been banished as a "{1}" to take the blame.</KCJ_BlameShift_Banish>
+
+  <!-- Role labels -->
+  <KCJ_Role_Employee>Full Employee</KCJ_Role_Employee>
+  <KCJ_Role_Intern>Intern</KCJ_Role_Intern>
+  <KCJ_Role_Employee_Tooltip>A "Full Employee" refers to a colonist who sacrifices for the cause.</KCJ_Role_Employee_Tooltip>
+  <KCJ_Role_Intern_Tooltip>An "Intern" refers to a slave who is thrown under the bus.</KCJ_Role_Intern_Tooltip>
+
+  <!-- Ritual quest message -->
+  <KCJ_Ritual_Quest_Message>The cultural ritual was a great success! The patron has sent another monument blueprint.</KCJ_Ritual_Quest_Message>
+
+  <!-- Research completion quest message -->
+  <KCJ_Research_Quest_Message>"Empty Fort Strategy" research complete! A big job just came in — a monument commission, twice the scale of usual.</KCJ_Research_Quest_Message>
+
+  <!-- Research completion quest letter -->
+  <KCJ_Research_Quest_Letter_Title>Empty Fort Strategy · Research Complete</KCJ_Research_Quest_Letter_Title>
+  <KCJ_Research_Quest_Letter_Text>"Empty Fort Strategy" research complete!\n\nA big job just came in — a monument commission "<b>{0}</b>", twice the scale of usual.\n\nSelect the monument and click the "Empty Fort Strategy" button to activate the shortcut mode — only the outer walls need to be built. But beware: during the protection period after completion, there is a daily chance of discovery. If exposed, the quest fails and relations deteriorate.</KCJ_Research_Quest_Letter_Text>
+
+  <!-- Attack status text -->
+  <KCJ_Attack_Already_Happened>The raid has already occurred and cannot be stopped.</KCJ_Attack_Already_Happened>
+  <KCJ_Attack_Stopped>The raid has been successfully prevented!</KCJ_Attack_Stopped>
+
+  <!-- Settings -->
+  <KCJ_Settings_Category>Empty Fort Strategy (空城计)</KCJ_Settings_Category>
+  <KCJ_Settings_ResearchCost>Research points required for "Empty City Strategy" (0 = automatically unlocked): {0}</KCJ_Settings_ResearchCost>
+  <KCJ_Settings_DiscoverChance>Daily discovery chance during protection period (%): {0}%</KCJ_Settings_DiscoverChance>
+  <KCJ_Settings_GoodwillLoss>Relation penalty when discovered: {0}</KCJ_Settings_GoodwillLoss>
+  <KCJ_Settings_BlameShift_Title>"Empty Fort — Blame Shift" Ritual</KCJ_Settings_BlameShift_Title>
+  <KCJ_Settings_BlameShift_Percent>Percentage of relation penalty restored by blame shift ritual: {0}%</KCJ_Settings_BlameShift_Percent>
+  <KCJ_Settings_BlameShift_Desc>Note: "Full Employee" = colonist, "Intern" = slave. Holding within 4 hours stops the raid; holding within 24 hours reduces the relation penalty.</KCJ_Settings_BlameShift_Desc>
+  <KCJ_Settings_Boost_Title>Monument quest (normal) appearance rate:</KCJ_Settings_Boost_Title>
+  <KCJ_Settings_Boost_Checkbox>Increase monument quest appearance rate</KCJ_Settings_Boost_Checkbox>
+  <KCJ_Settings_Boost_Multiplier>Monument quest appearance rate multiplier: {0}x</KCJ_Settings_Boost_Multiplier>
+  <KCJ_Settings_Ritual_Title>Cultural Ritual Effect "Empty Fort — Propaganda"</KCJ_Settings_Ritual_Title>
+  <KCJ_Settings_Ritual_Desc>Auto-triggers on any cultural ritual with "Good" or above quality — no need to configure in "Edit Ideogram".\n\nYou can also click the "Propaganda" button on a completed monument to trigger it manually (1-day cooldown).</KCJ_Settings_Ritual_Desc>
+  <KCJ_Settings_Ritual_Chance>Chance to refresh a monument quest when ritual quality is Good or above: {0}%</KCJ_Settings_Ritual_Chance>
+  <KCJ_Settings_Ritual_Tooltip>"Empty Fort — Propaganda" is a cultural ritual effect. After assigning it to a ritual, if the ritual ends with a quality of "Good" or above, there is this chance to generate a new monument (build and protect) quest.\n\nThis is the "ritual effect trigger" chance, default 100%, adjustable between 0% and 100%. Setting it to 0% means no quest will be generated even if the ritual succeeds.\n\nThis is independent from the "Monument quest (normal) appearance rate" setting above — the above adjusts the frequency of normal monument quests (default 100%); this one adds an extra chance to receive a monument quest after a ritual.</KCJ_Settings_Ritual_Tooltip>
+  <KCJ_Settings_Propaganda_Title>"Propaganda Ceremony" (Monument Gizmo, manual trigger)</KCJ_Settings_Propaganda_Title>
+  <KCJ_Settings_Propaganda_Duration>Propaganda ceremony duration (in-game hours): {0}</KCJ_Settings_Propaganda_Duration>
+  <KCJ_Settings_Propaganda_Duration_Tooltip>How long the propaganda ceremony lasts (in-game hours). After the ceremony ends, quality is calculated. Default: 2 hours.</KCJ_Settings_Propaganda_Duration_Tooltip>
+  <KCJ_Settings_Propaganda_Cooldown>Propaganda ceremony cooldown (days): {0} day(s)</KCJ_Settings_Propaganda_Cooldown>
+  <KCJ_Settings_Note>Note: Click the "Empty Fort Strategy" button on the monument again to disable this mode.</KCJ_Settings_Note>
+</LanguageData>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <!-- Gizmo 按钮 -->
+  <KCJ_Gizmo_Label>空城计</KCJ_Gizmo_Label>
+  <KCJ_Gizmo_Desc>开启后，纪念碑蓝图将只保留外墙（外围一圈），内部清空，只需砌好外墙即可视为完工。\n\n注意：以空城计模式建成后，在保护期的每一天都有概率被看穿，一旦被看穿，任务将判定失败，并与委托派系关系恶化。可再次点击关闭以恢复完整蓝图。</KCJ_Gizmo_Desc>
+
+  <!-- 开启/关闭消息 -->
+  <KCJ_Enabled_Message>空城计已开启：纪念碑只需建造外墙即可视为完工。</KCJ_Enabled_Message>
+  <KCJ_Disabled_Message>空城计已关闭：恢复完整蓝图。</KCJ_Disabled_Message>
+
+  <!-- 确认弹窗 -->
+  <KCJ_Confirm_Title>空城计</KCJ_Confirm_Title>
+  <KCJ_Confirm_Text>以此计开启后，纪念碑只需建造那堵严严实实的外墙即可视为完工——里面空得能跑马。\n\n但空城一计瞒不过天：建成后的保护期内，每天都有一定概率被看穿。一旦露馅，任务直接失败，并与委托方派系关系恶化。\n\n确认开启空城计模式？</KCJ_Confirm_Text>
+  <KCJ_Confirm_Button>开启空城计</KCJ_Confirm_Button>
+  <KCJ_Confirm_Cancel>取消</KCJ_Confirm_Cancel>
+
+  <!-- 败露弹窗 -->
+  <KCJ_Exposed_Title>空城计 · 败露</KCJ_Exposed_Title>
+  <KCJ_Exposed_Text>虚虚实实，终被看穿。\n\n委托派系识破了这座空城，纪念碑任务判定失败。对方因此降下感观：与你的关系减少 {0}。\n\n4小时后将触发委托派系惩罚。\n\n你有4小时的时间窗口可举行「空城计-顶罪」仪式阻止袭击，24小时内举行仍可减少关系惩罚。</KCJ_Exposed_Text>
+  <KCJ_Exposed_Button>知道了</KCJ_Exposed_Button>
+
+  <!-- 败露消息 -->
+  <KCJ_Exposed_Message>空城计败露！{0} 委托判定失败。\n4小时后将触发委托派系惩罚。4小时内举行「空城计-顶罪」仪式可阻止袭击，24小时内举行仍可减少关系惩罚。</KCJ_Exposed_Message>
+
+  <!-- 倒计时警告 -->
+  <KCJ_Warning_Message>空城计败露警告：委托派系惩罚将在 {0} 后触发。可举行「空城计-顶罪」仪式放逐一名人员来平息怒火。</KCJ_Warning_Message>
+
+  <!-- 时间格式 -->
+  <KCJ_Time_HoursMinutes>{0}小时{1}分</KCJ_Time_HoursMinutes>
+  <KCJ_Time_Minutes>{0}分</KCJ_Time_Minutes>
+
+  <!-- 惩罚信件 -->
+  <KCJ_Penalty_Letter_Title>空城计败露 · 惩罚</KCJ_Penalty_Letter_Title>
+  <KCJ_Penalty_Letter_Text>委托派系的惩罚已降临！\n\n如果之前在4小时内举行了「空城计-顶罪」仪式，本可以阻止这次袭击。24小时内举行至少可以减少关系惩罚。</KCJ_Penalty_Letter_Text>
+
+  <!-- 警告信件 -->
+  <KCJ_Warning_Letter_Title>空城计败露 · 惩罚警告</KCJ_Warning_Letter_Title>
+  <KCJ_Warning_Letter_Text>空城计被看穿了！4小时后将触发委托派系惩罚（若原任务包含袭击惩罚，则会发动袭击）。\n\n你有4小时的时间窗口来举行「空城计-顶罪」仪式阻止袭击，在24小时内举行仍可撤销 {0}% 的关系惩罚。\n\n选中被看穿的纪念碑，点击「顶罪仪式」按钮，或通过文化仪式来进行，放逐一名「正式员工」（殖民者）或「实习生」（奴隶），即可执行顶罪。\n\n你也可以选择不举行仪式，承受惩罚的后果。</KCJ_Warning_Letter_Text>
+
+  <!-- 顶罪仪式 Gizmo（自动触发，无需文化配置） -->
+  <KCJ_BlameShift_Gizmo_Label>顶罪仪式</KCJ_BlameShift_Gizmo_Label>
+  <KCJ_BlameShift_Gizmo_Desc>空城计败露后，举行顶罪仪式放逐一名「正式员工」（殖民者）或「实习生」（奴隶），在4小时内可阻止派系袭击，24小时内仍可撤销部分关系惩罚。\n\n无需文化模因，无需额外设置——只要被看穿即可举行。</KCJ_BlameShift_Gizmo_Desc>
+
+  <!-- 顶罪仪式确认弹窗 -->
+  <KCJ_BlameShift_Confirm_Title>空城计 · 顶罪仪式</KCJ_BlameShift_Confirm_Title>
+  <KCJ_BlameShift_Confirm_Text>空城计被看穿了！你将放逐一名人员来承担败露的责任。\n\n放逐后，该人员将永远离开你的殖民地。若在4小时内举行，可阻止派系袭击；24小时内举行仍可撤销部分关系惩罚。</KCJ_BlameShift_Confirm_Text>
+  <KCJ_BlameShift_Confirm_Pawn>顶罪者：{0}\n身份：{1}\n\n{2}</KCJ_BlameShift_Confirm_Pawn>
+  <KCJ_BlameShift_Confirm_Button>放逐顶罪</KCJ_BlameShift_Confirm_Button>
+  <KCJ_BlameShift_Select_Pawn>请选择一名人员作为顶罪者：</KCJ_BlameShift_Select_Pawn>
+
+  <!-- 宣传仪式 Gizmo（自动出现，无需文化配置） -->
+  <KCJ_Propaganda_Gizmo_Label>宣传仪式</KCJ_Propaganda_Gizmo_Label>
+  <KCJ_Propaganda_Gizmo_Desc>举行宣传仪式，持续 {0} 小时，吸引民众关注。\n\n仪式结束后，按质量结算效果：良好及以上将刷新一座新的纪念碑（建造并保护）任务。\n\n无需文化模因，无需额外设置——纪念碑完工后即可使用。\n\n冷却时间：{1} 天。</KCJ_Propaganda_Gizmo_Desc>
+  <KCJ_Propaganda_Gizmo_Desc_Running>宣传仪式进行中（进度 {0}%）。</KCJ_Propaganda_Gizmo_Desc_Running>
+  <KCJ_Propaganda_Gizmo_Desc_Cooldown>宣传仪式冷却中，剩余 {0} 小时。\n\n冷却时间：{1} 天。</KCJ_Propaganda_Gizmo_Desc_Cooldown>
+  <KCJ_Propaganda_Cooldown_Message>宣传仪式正在冷却中（剩余 {0} 小时）。</KCJ_Propaganda_Cooldown_Message>
+  <KCJ_Propaganda_AlreadyRunning>宣传仪式正在进行中，请等待仪式结束。</KCJ_Propaganda_AlreadyRunning>
+
+  <!-- 宣传仪式对话框 -->
+  <KCJ_Ceremony_Dialog_Title>空城计 · 宣传仪式</KCJ_Ceremony_Dialog_Title>
+  <KCJ_Ceremony_Dialog_Info>举行宣传仪式，持续 {0} 小时，吸引民众关注。\n\n仪式结束后将根据参与人数和场地氛围计算质量，质量越高，委托方送来的纪念碑任务越好。</KCJ_Ceremony_Dialog_Info>
+  <KCJ_Ceremony_Dialog_Quality>参与人数：{0} 人 | 预估质量：{1}%</KCJ_Ceremony_Dialog_Quality>
+  <KCJ_Ceremony_Dialog_Participants>选择参与人员（点击勾选/取消）：</KCJ_Ceremony_Dialog_Participants>
+  <KCJ_Ceremony_Start_Button>开始仪式</KCJ_Ceremony_Start_Button>
+  <KCJ_Ceremony_NoParticipants>请至少选择一名参与者</KCJ_Ceremony_NoParticipants>
+
+  <!-- 宣传仪式开始通知 -->
+  <KCJ_Ceremony_Start_Title>空城计 · 宣传仪式开始</KCJ_Ceremony_Start_Title>
+  <KCJ_Ceremony_Start_Text>宣传仪式已开始！将持续 {0} 小时。\n\n仪式结束后根据质量决定委托方送来的纪念碑任务好坏。</KCJ_Ceremony_Start_Text>
+  <KCJ_Ceremony_Start_Message>宣传仪式已开始！持续 {0} 小时。</KCJ_Ceremony_Start_Message>
+
+  <!-- 宣传仪式结束通知（同原版仪式，质量决定效果好坏） -->
+  <KCJ_Ceremony_Complete_Title>空城计 · 宣传仪式结束</KCJ_Ceremony_Complete_Title>
+  <KCJ_Ceremony_Complete_Text>宣传仪式结束，质量 {0}%。\n\n委托方对你的宣传印象深刻，送来了一座新的纪念碑蓝图。</KCJ_Ceremony_Complete_Text>
+
+  <!-- 顶罪成功信件 -->
+  <KCJ_BlameShift_Letter_Title>空城计 · 顶罪成功</KCJ_BlameShift_Letter_Title>
+  <KCJ_BlameShift_Letter_Text>仪式完成！一名「正式员工」已被放逐，承担了空城计败露的责任。\n\n关系恢复了 {0} 点（原惩罚的 {1}%）。\n\n{2}</KCJ_BlameShift_Letter_Text>
+
+  <!-- 顶罪详情信件 -->
+  <KCJ_BlameShift_Detail_Title>空城计 · 顶罪</KCJ_BlameShift_Detail_Title>
+  <KCJ_BlameShift_Detail_Text>仪式中，{0} 作为「{1}」被放逐，承担了空城计败露的责任。\n\n{2}</KCJ_BlameShift_Detail_Text>
+
+  <!-- 顶罪消息 -->
+  <KCJ_BlameShift_NoEvent>当前没有可顶罪的空城计败露事件。</KCJ_BlameShift_NoEvent>
+  <KCJ_BlameShift_NoParticipant>「空城计-顶罪」仪式需要至少一名殖民者或奴隶作为参与者。</KCJ_BlameShift_NoParticipant>
+  <KCJ_BlameShift_Banish>{0} 作为「{1}」被放逐顶罪。</KCJ_BlameShift_Banish>
+
+  <!-- 身份标签 -->
+  <KCJ_Role_Employee>正式员工</KCJ_Role_Employee>
+  <KCJ_Role_Intern>实习生</KCJ_Role_Intern>
+  <KCJ_Role_Employee_Tooltip>「正式员工」指一名殖民者，为我们的事业献身。</KCJ_Role_Employee_Tooltip>
+  <KCJ_Role_Intern_Tooltip>「实习生」指一名奴隶，被推出来顶罪。</KCJ_Role_Intern_Tooltip>
+
+  <!-- 仪式刷新任务消息 -->
+  <KCJ_Ritual_Quest_Message>文化仪式大获成功，委托方再次送来了一座纪念碑的蓝图。</KCJ_Ritual_Quest_Message>
+
+  <!-- 研究完成触发任务消息 -->
+  <KCJ_Research_Quest_Message>"空城计"研究完成！恰逢委托方有个大活儿——一座纪念碑的建造委托，规模是往常的两倍。</KCJ_Research_Quest_Message>
+
+  <!-- 研究完成触发任务信件 -->
+  <KCJ_Research_Quest_Letter_Title>空城计 · 研究完成</KCJ_Research_Quest_Letter_Title>
+  <KCJ_Research_Quest_Letter_Text>"空城计"研究完成！\n\n恰逢委托方有个大活儿——一座纪念碑的建造委托"<b>{0}</b>"，规模是往常的两倍。\n\n选中纪念碑后，点击「空城计」按钮即可开启取巧模式，仅需建造外墙即可完工——但建成后保护期内每天有几率被看穿，一旦露馅任务失败、关系恶化。</KCJ_Research_Quest_Letter_Text>
+
+  <!-- 袭击状态 -->
+  <KCJ_Attack_Already_Happened>袭击已经发生，无法阻止。</KCJ_Attack_Already_Happened>
+  <KCJ_Attack_Stopped>袭击已被成功阻止！</KCJ_Attack_Stopped>
+
+  <!-- 设置页面 -->
+  <KCJ_Settings_Category>空城计 (The Empty Fort Strategy)</KCJ_Settings_Category>
+  <KCJ_Settings_ResearchCost>研究「空城计」所需点数（0 表示默认拥有）: {0}</KCJ_Settings_ResearchCost>
+  <KCJ_Settings_DiscoverChance>保护期内每天被发现的概率（百分比）: {0}%</KCJ_Settings_DiscoverChance>
+  <KCJ_Settings_GoodwillLoss>被发现时减少的关系量: {0}</KCJ_Settings_GoodwillLoss>
+  <KCJ_Settings_BlameShift_Title>「空城计-顶罪」仪式</KCJ_Settings_BlameShift_Title>
+  <KCJ_Settings_BlameShift_Percent>顶罪仪式撤销关系惩罚的比例（百分比）: {0}%</KCJ_Settings_BlameShift_Percent>
+  <KCJ_Settings_BlameShift_Desc>说明：「正式员工」= 殖民者，「实习生」= 奴隶。4小时内举行可阻止袭击，24小时内举行可减少关系惩罚。</KCJ_Settings_BlameShift_Desc>
+  <KCJ_Settings_Boost_Title>纪念碑任务（平时）出现概率：</KCJ_Settings_Boost_Title>
+  <KCJ_Settings_Boost_Checkbox>提高纪念碑任务出现概率</KCJ_Settings_Boost_Checkbox>
+  <KCJ_Settings_Boost_Multiplier>纪念碑任务出现概率放大倍数: {0}x</KCJ_Settings_Boost_Multiplier>
+  <KCJ_Settings_Ritual_Title>文化仪式效果「空城计-宣传」</KCJ_Settings_Ritual_Title>
+  <KCJ_Settings_Ritual_Desc>自动生效：任何文化仪式达到「良好及以上」质量时自动触发，无需在「编辑文化」中配置。也可在完工的纪念碑上点击「宣传仪式」按钮手动触发（冷却1天）。</KCJ_Settings_Ritual_Desc>
+  <KCJ_Settings_Ritual_Chance>仪式质量良好及以上时刷新纪念碑任务概率: {0}%</KCJ_Settings_Ritual_Chance>
+  <KCJ_Settings_Ritual_Tooltip>「空城计-宣传」是一个文化仪式效果：把它选到某场仪式上后，若该仪式结束质量达到「良好及以上」，就有该概率刷新一座新的纪念碑（建造并保护）任务。\n\n这是「仪式效果触发」的概率，默认 100%，可在 0% ~ 100% 之间调节；0% 表示即使仪式成功也不刷新。\n\n它与上方「纪念碑任务（平时）出现概率」互不影响：上方那个调节的是平时委托方送任务的频率（原版默认 100%）；这个是仪式结束后额外再送一座纪念碑的机会。</KCJ_Settings_Ritual_Tooltip>
+  <KCJ_Settings_Propaganda_Title>「宣传仪式」（纪念碑 Gizmo 手动触发）</KCJ_Settings_Propaganda_Title>
+  <KCJ_Settings_Propaganda_Duration>宣传仪式持续时间（游戏内小时）: {0}</KCJ_Settings_Propaganda_Duration>
+  <KCJ_Settings_Propaganda_Duration_Tooltip>宣传仪式持续的时间长度（游戏内小时）。仪式结束后按质量结算效果。默认 2 小时。</KCJ_Settings_Propaganda_Duration_Tooltip>
+  <KCJ_Settings_Propaganda_Cooldown>宣传仪式冷却天数: {0} 天</KCJ_Settings_Propaganda_Cooldown>
+  <KCJ_Settings_Note>说明：默认再次点击纪念碑的「空城计」按钮即可关闭本模式。</KCJ_Settings_Note>
+</LanguageData>

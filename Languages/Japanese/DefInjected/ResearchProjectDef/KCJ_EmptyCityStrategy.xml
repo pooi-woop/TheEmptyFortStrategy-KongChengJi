@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <KCJ_EmptyCityStrategy.label>空城計</KCJ_EmptyCityStrategy.label>
+  <KCJ_EmptyCityStrategy.description>「弱く見えるときに強くあれ」の技術を習得する。この計略を研究した後、記念碑の外壁がしっかりと築かれていれば—内部が完全に空でも—依頼主の目を欺けることに気づく。以降、記念碑クエストは外壁のみで完成とみなされる（ただし、必要な日数は保護期間として守らなければならない）。</KCJ_EmptyCityStrategy.description>
+</LanguageData>

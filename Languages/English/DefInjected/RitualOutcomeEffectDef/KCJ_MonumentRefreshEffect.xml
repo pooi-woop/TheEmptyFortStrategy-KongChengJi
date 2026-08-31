@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <KCJ_MonumentRefreshEffect.label>Empty Fort — Propaganda</KCJ_MonumentRefreshEffect.label>
+  <KCJ_MonumentRefreshEffect.description>After selecting this effect for a ritual in "Edit Ideogram", when the ritual ends with a quality of "Good" or above, there is an adjustable chance (default 100%) to generate a new monument construction quest — propaganda at its finest, making the patron favor you even more.</KCJ_MonumentRefreshEffect.description>
+</LanguageData>

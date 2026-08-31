@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <!-- Gizmo ボタン -->
+  <KCJ_Gizmo_Label>空城計</KCJ_Gizmo_Label>
+  <KCJ_Gizmo_Desc>有効にすると、記念碑の設計図は外壁（外周）のみが残り、内部は空になります。外壁を建てるだけで記念碑が完成したとみなされます。\n\n注意：空城計モードで完成後、保護期間中は毎日一定の確率で発覚します。発覚するとクエストは失敗し、依頼派閥との関係が悪化します。もう一度クリックで無効にし、完全な設計図に戻せます。</KCJ_Gizmo_Desc>
+
+  <!-- 有効/無効メッセージ -->
+  <KCJ_Enabled_Message>空城計を起動：記念碑は外壁のみで完成とみなされます。</KCJ_Enabled_Message>
+  <KCJ_Disabled_Message>空城計を無効化：完全な設計図に戻しました。</KCJ_Disabled_Message>
+
+  <!-- 確認ダイアログ -->
+  <KCJ_Confirm_Title>空城計</KCJ_Confirm_Title>
+  <KCJ_Confirm_Text>この計略により、記念碑は頑丈な外壁を築くだけで「完成」とみなされます——内部は空っぽのままです。\n\nしかし、空城の計は長くは通用しません：完成後の保護期間中、毎日一定の確率で「見破られ」ます。露見すればクエストは即座に失敗し、依頼派閥との関係が悪化します。\n\n空城計モードを起動しますか？</KCJ_Confirm_Text>
+  <KCJ_Confirm_Button>空城計を起動</KCJ_Confirm_Button>
+  <KCJ_Confirm_Cancel>キャンセル</KCJ_Confirm_Cancel>
+
+  <!-- 発覚ダイアログ -->
+  <KCJ_Exposed_Title>空城計 · 露見</KCJ_Exposed_Title>
+  <KCJ_Exposed_Text>虚実皮膜、ついに見破られた。\n\n依頼派閥はこの空城を見抜きました。記念碑クエストは失敗と判定されました。相手は怒り、あなたとの関係が {0} 減少しました。\n\n4時間後に依頼派閥のペナルティが発動します。\n「空城計 — 責任転嫁」の儀式を行い、怒りを静めることができます。</KCJ_Exposed_Text>
+  <KCJ_Exposed_Button>了解</KCJ_Exposed_Button>
+
+  <!-- 発覚メッセージ -->
+  <KCJ_Exposed_Message>空城計露見！{0} クエスト失敗。\n4時間後に依頼派閥のペナルティが発動します。「空城計 — 責任転嫁」の儀式を行い、怒りを静めてください。</KCJ_Exposed_Message>
+
+  <!-- カウントダウン警告 -->
+  <KCJ_Warning_Message>空城計露見警告：依頼派閥のペナルティが {0} 後に発動します。「空城計 — 責任転嫁」の儀式で人員を追放し、怒りを静めてください。</KCJ_Warning_Message>
+
+  <!-- 時間フォーマット -->
+  <KCJ_Time_HoursMinutes>{0}時間{1}分</KCJ_Time_HoursMinutes>
+  <KCJ_Time_Minutes>{0}分</KCJ_Time_Minutes>
+
+  <!-- ペナルティレター -->
+  <KCJ_Penalty_Letter_Title>空城計露見 · ペナルティ</KCJ_Penalty_Letter_Title>
+  <KCJ_Penalty_Letter_Text>依頼派閥のペナルティが発動しました！\n\n24時間以内に「空城計 — 責任転嫁」の儀式を行っていれば、このペナルティは避けられたはずです。</KCJ_Penalty_Letter_Text>
+
+  <!-- 警告レター -->
+  <KCJ_Warning_Letter_Title>空城計露見 · ペナルティ警告</KCJ_Warning_Letter_Title>
+  <KCJ_Warning_Letter_Text>空城計が見破られました！4時間後に依頼派閥のペナルティが発動します（元のクエストに襲撃ペナルティが含まれている場合、襲撃が発生します）。\n\n24時間以内に「空城計 — 責任転嫁」の儀式を行うことができます。\n見破られた記念碑を選択し、「責任転嫁」ボタンをクリックし、「正社員」（入植者）または「インターン」（奴隷）を追放することで、関係ペナルティの {0}% を回復し、ペナルティを防げます。\n\n儀式を行わず、ペナルティの結果を受け入れることもできます。</KCJ_Warning_Letter_Text>
+
+  <!-- 責任転嫁 Gizmo（自動発動、カルチャー設定不要） -->
+  <KCJ_BlameShift_Gizmo_Label>責任転嫁</KCJ_BlameShift_Gizmo_Label>
+  <KCJ_BlameShift_Gizmo_Desc>空城計露見後、責任転嫁の儀式を行い「正社員」（入植者）または「インターン」（奴隷）を追放することで、関係ペナルティの一部を回復し、派閥の襲撃を防ぎます。\n\n文化的ミームや追加設定は不要——露見すればすぐに実行できます。</KCJ_BlameShift_Gizmo_Desc>
+
+  <!-- 責任転嫁確認ダイアログ -->
+  <KCJ_BlameShift_Confirm_Title>空城計 · 責任転嫁</KCJ_BlameShift_Confirm_Title>
+  <KCJ_BlameShift_Confirm_Text>空城計が見破られました！人員を追放して責任を負わせます。\n\n追放後、その人員は永遠にコロニーを去りますが、関係ペナルティの一部が回復し、派閥の襲撃を防げます。</KCJ_BlameShift_Confirm_Text>
+  <KCJ_BlameShift_Confirm_Pawn>責任転嫁者：{0}\n役割：{1}\n\n{2}</KCJ_BlameShift_Confirm_Pawn>
+  <KCJ_BlameShift_Confirm_Button>追放して責任転嫁</KCJ_BlameShift_Confirm_Button>
+  <KCJ_BlameShift_Select_Pawn>責任転嫁させる人員を選択してください：</KCJ_BlameShift_Select_Pawn>
+
+  <!-- 責任転嫁成功レター -->
+  <KCJ_BlameShift_Letter_Title>空城計 · 責任転嫁成功</KCJ_BlameShift_Letter_Title>
+  <KCJ_BlameShift_Letter_Text>儀式完了！「正社員」が追放され、空城計露見の責任を負いました。\n\n関係が {0} 回復しました（元のペナルティの {1}%）。\n{2}</KCJ_BlameShift_Letter_Text>
+
+  <!-- 責任転嫁詳細レター -->
+  <KCJ_BlameShift_Detail_Title>空城計 · 責任転嫁</KCJ_BlameShift_Detail_Title>
+  <KCJ_BlameShift_Detail_Text>儀式の最中、{0} が「{1}」として追放され、空城計露見の責任を負いました。\n\n{2}</KCJ_BlameShift_Detail_Text>
+
+  <!-- 責任転嫁メッセージ -->
+  <KCJ_BlameShift_NoEvent>現在、責任転嫁可能な空城計露見イベントはありません。</KCJ_BlameShift_NoEvent>
+  <KCJ_BlameShift_NoParticipant>「空城計 — 責任転嫁」の儀式には、少なくとも1人の入植者または奴隷が参加者として必要です。</KCJ_BlameShift_NoParticipant>
+  <KCJ_BlameShift_Banish>{0} が「{1}」として追放され、責任を負わされました。</KCJ_BlameShift_Banish>
+
+  <!-- 役割ラベル -->
+  <KCJ_Role_Employee>正社員</KCJ_Role_Employee>
+  <KCJ_Role_Intern>インターン</KCJ_Role_Intern>
+  <KCJ_Role_Employee_Tooltip>「正社員」とは、我々の事業に身を捧げる入植者を指します。</KCJ_Role_Employee_Tooltip>
+  <KCJ_Role_Intern_Tooltip>「インターン」とは、責任を負わされる奴隷を指します。</KCJ_Role_Intern_Tooltip>
+
+  <!-- 儀式クエストメッセージ -->
+  <KCJ_Ritual_Quest_Message>文化儀式は大成功！依頼主が新たな記念碑の設計図を送ってきました。</KCJ_Ritual_Quest_Message>
+
+  <!-- 研究完了クエストメッセージ -->
+  <KCJ_Research_Quest_Message>「空城計」の研究完了！ちょうど大きな仕事が舞い込んできました——通常の2倍の規模の記念碑建造の依頼です。</KCJ_Research_Quest_Message>
+
+  <!-- 研究完了クエストレター -->
+  <KCJ_Research_Quest_Letter_Title>空城計 · 研究完了</KCJ_Research_Quest_Letter_Title>
+  <KCJ_Research_Quest_Letter_Text>「空城計」の研究完了！\n\nちょうど大きな仕事が舞い込んできました——記念碑建造の依頼「<b>{0}</b>」、通常の2倍の規模です。\n\n記念碑を選択し、「空城計」ボタンをクリックすると省略モードを起動できます。外壁のみを建設すれば完了とみなされます。ただし、完成後の保護期間中は毎日発覚の確率があり、露見すればクエスト失敗、関係悪化となります。</KCJ_Research_Quest_Letter_Text>
+
+  <!-- 襲撃ステータス -->
+  <KCJ_Attack_Already_Happened>襲撃はすでに発生しており、阻止できません。</KCJ_Attack_Already_Happened>
+  <KCJ_Attack_Stopped>襲撃は無事に阻止されました！</KCJ_Attack_Stopped>
+
+  <!-- 設定 -->
+  <KCJ_Settings_Category>空城計 (The Empty Fort Strategy)</KCJ_Settings_Category>
+  <KCJ_Settings_ResearchCost>「空城計」の研究ポイント（0 = 自動アンロック）: {0}</KCJ_Settings_ResearchCost>
+  <KCJ_Settings_DiscoverChance>保護期間中の毎日の発覚確率（%）: {0}%</KCJ_Settings_DiscoverChance>
+  <KCJ_Settings_GoodwillLoss>発覚時の関係ペナルティ: {0}</KCJ_Settings_GoodwillLoss>
+  <KCJ_Settings_BlameShift_Title>「空城計 — 責任転嫁」儀式</KCJ_Settings_BlameShift_Title>
+  <KCJ_Settings_BlameShift_Percent>責任転嫁儀式で回復する関係ペナルティの割合（%）: {0}%</KCJ_Settings_BlameShift_Percent>
+  <KCJ_Settings_BlameShift_Desc>注：「正社員」= 入植者、「インターン」= 奴隷。責任転嫁儀式は露見後24時間以内に行う必要があります。</KCJ_Settings_BlameShift_Desc>
+  <KCJ_Settings_Boost_Title>記念碑クエスト（通常）出現率：</KCJ_Settings_Boost_Title>
+  <KCJ_Settings_Boost_Checkbox>記念碑クエストの出現率を上げる</KCJ_Settings_Boost_Checkbox>
+  <KCJ_Settings_Boost_Multiplier>記念碑クエスト出現率の倍率: {0}x</KCJ_Settings_Boost_Multiplier>
+  <KCJ_Settings_Ritual_Title>文化儀式効果「空城計 — 宣伝」</KCJ_Settings_Ritual_Title>
+  <KCJ_Settings_Ritual_Desc>「イデオロギー編集 → 儀式効果」でこの効果を儀式に選択してください。Ideology DLCが必要です。</KCJ_Settings_Ritual_Desc>
+  <KCJ_Settings_Ritual_Chance>儀式の質が「良好」以上の場合に記念碑クエストを更新する確率: {0}%</KCJ_Settings_Ritual_Chance>
+  <KCJ_Settings_Ritual_Tooltip>「空城計 — 宣伝」は文化儀式効果です。儀式に設定後、儀式の質が「良好」以上で終了すると、この確率で新しい記念碑（建設＋保護）クエストが生成されます。\n\nこれは「儀式効果発動」の確率で、デフォルト100%、0%〜100%の間で調整可能です。0%に設定すると、儀式が成功してもクエストは生成されません。\n\n上記の「記念碑クエスト（通常）出現率」とは独立して動作します。上記は通常の記念碑クエストの頻度を調整し、こちらは儀式後に追加で記念碑クエストを得る機会を提供します。</KCJ_Settings_Ritual_Tooltip>
+  <KCJ_Settings_Note>注：記念碑の「空城計」ボタンをもう一度クリックすると、このモードを無効にできます。</KCJ_Settings_Note>
+</LanguageData>

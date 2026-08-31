@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <KCJ_BlameShiftEffect.label>空城計 — 責任転嫁</KCJ_BlameShiftEffect.label>
+  <KCJ_BlameShiftEffect.description>「空城計」が露見した場合、24時間以内にこの儀式を行います。儀式の最中に「正社員」（入植者）または「インターン」（奴隷）を追放することで、露見による関係ペナルティの70%（調整可能）を回復し、派閥の報復襲撃を防ぎます。</KCJ_BlameShiftEffect.description>
+</LanguageData>

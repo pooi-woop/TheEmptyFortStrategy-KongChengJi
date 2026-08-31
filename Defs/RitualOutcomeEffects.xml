@@ -74,4 +74,50 @@
     </outcomeChances>
   </RitualOutcomeEffectDef>
 
+  <!-- ================================================================ -->
+  <!-- 空城计-顶罪：败露后24小时内举行仪式，放逐一名人员来背锅          -->
+  <!-- ================================================================ -->
+  <RitualOutcomeEffectDef>
+    <defName>KCJ_BlameShiftEffect</defName>
+    <label>空城计-顶罪</label>
+    <description>若「空城计」败露，可在败露后4小时内举行此仪式阻止袭击，24小时内举行仍可减少关系惩罚。在仪式中放逐一名「正式员工」（殖民者）或「实习生」（奴隶），以撤销70%（可调）的败露关系惩罚。</description>
+    <workerClass>PooiKongChengJi.RitualOutcomeEffectWorker_KongChengJiBlameShift</workerClass>
+    <givesDevelopmentPoints>false</givesDevelopmentPoints>
+    <startingQuality>0.3</startingQuality>
+    <minQuality>0</minQuality>
+    <maxQuality>1</maxQuality>
+    <comps>
+      <li Class="RitualOutcomeComp_ParticipantCount">
+        <label>participant count</label>
+        <curve>
+          <points>
+            <li>(1,  0.2)</li>
+            <li>(5,  0.4)</li>
+            <li>(10, 0.6)</li>
+            <li>(17, 0.7)</li>
+          </points>
+        </curve>
+      </li>
+      <li Class="RitualOutcomeComp_RoomStat">
+        <label>room impressiveness</label>
+        <statDef>Impressiveness</statDef>
+        <curve>
+          <points>
+            <li>0,   0</li>
+            <li>50,  0.1</li>
+            <li>120, 0.2</li>
+          </points>
+        </curve>
+      </li>
+    </comps>
+    <outcomeChances>
+      <li>
+        <label>顶罪成功</label>
+        <description>The scapegoat has been banished. The faction's anger is partially appeased.</description>
+        <chance>1.0</chance>
+        <positivityIndex>1</positivityIndex>
+      </li>
+    </outcomeChances>
+  </RitualOutcomeEffectDef>
+
 </Defs>
