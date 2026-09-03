@@ -77,6 +77,10 @@
   <KCJ_Research_Quest_Letter_Title>空城計 · 研究完了</KCJ_Research_Quest_Letter_Title>
   <KCJ_Research_Quest_Letter_Text>「空城計」の研究完了！\n\nちょうど大きな仕事が舞い込んできました——記念碑建造の依頼「<b>{0}</b>」、通常の2倍の規模です。\n\n記念碑を選択し、「空城計」ボタンをクリックすると省略モードを起動できます。外壁のみを建設すれば完了とみなされます。ただし、完成後の保護期間中は毎日発覚の確率があり、露見すればクエスト失敗、関係悪化となります。</KCJ_Research_Quest_Letter_Text>
 
+  <!-- 宣伝儀式 HUD（画面上部常設プログレスバー） -->
+  <KCJ_HUD_Title>宣伝儀式 進行中</KCJ_HUD_Title>
+  <KCJ_HUD_Remaining>残り {0}</KCJ_HUD_Remaining>
+
   <!-- 襲撃ステータス -->
   <KCJ_Attack_Already_Happened>襲撃はすでに発生しており、阻止できません。</KCJ_Attack_Already_Happened>
   <KCJ_Attack_Stopped>襲撃は無事に阻止されました！</KCJ_Attack_Stopped>

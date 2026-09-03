@@ -64,6 +64,10 @@
   <KCJ_Ceremony_Start_Button>Start Ceremony</KCJ_Ceremony_Start_Button>
   <KCJ_Ceremony_NoParticipants>Select at least one participant</KCJ_Ceremony_NoParticipants>
 
+  <!-- Propaganda ceremony HUD (persistent progress bar at top of screen) -->
+  <KCJ_HUD_Title>Propaganda Ceremony in Progress</KCJ_HUD_Title>
+  <KCJ_HUD_Remaining>Remaining: {0}</KCJ_HUD_Remaining>
+
   <!-- Propaganda ceremony start notification -->
   <KCJ_Ceremony_Start_Title>Empty Fort · Propaganda Started</KCJ_Ceremony_Start_Title>
   <KCJ_Ceremony_Start_Text>The propaganda ceremony has begun! It will last {0} hours.\n\nAfter the ceremony ends, the quality will determine the monument quest offered by the patron.</KCJ_Ceremony_Start_Text>

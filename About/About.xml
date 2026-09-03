@@ -42,7 +42,7 @@
     </li>
   </modDependencies>
 
-  <!-- Mod 描述 -->
+  <!-- Mod 描述（中文 + English） -->
   <description>「虚则实之，实则虚之。」—— 只需砌好纪念碑的外墙，内部空空如也也算「完工」。
 
 研究「空城计」科技后，选中任意纪念碑即可切换至空城计模式，蓝图自动精简为只保留外墙。但空城瞒不过天：保护期内每天有概率被看穿，一旦露馅将任务失败、关系恶化。
@@ -54,15 +54,14 @@
 · 4 小时后触发委托派系惩罚袭击，每 1 小时倒计时提醒
 
 【顶罪仪式】
-败露后有两种方式举行顶罪仪式，玩家手动选择放逐对象：
+败露后可以举行顶罪仪式，玩家手动选择一个正式员工或者实习生放逐：
 · 纪念碑 Gizmo：选中被看穿的纪念碑，直接点击「顶罪仪式」
-· 文化仪式效果（需 Ideology DLC）：在「编辑文化」中配置「空城计-顶罪」
 4 小时内举行可阻止袭击，24 小时内可撤销部分关系惩罚（默认 70%，可调）
 
 【宣传仪式】
 完工纪念碑可以举行宣传仪式刷新新的纪念碑任务：
-· 纪念碑 Gizmo：点击「宣传仪式」按钮（冷却 1 天）
-· 仪式自动触发：任何文化仪式达到良好以上质量时自动触发（无冷却）
+· 纪念碑 Gizmo：点击「宣传仪式」按钮（默认冷却 5 天）
+· 仪式达到良好以上质量时便能刷新新的任务
 
 【设置选项】
 · 研究点数 0~1000（默认 200）
@@ -72,5 +71,38 @@
 · 纪念碑任务出现概率加成（开关 + 倍率 1x~50x，默认关闭）
 · 宣传仪式刷新概率 0%~100%（默认 100%）
 
-依赖：Harmony（必需）、Royalty（必需）、Ideology（可选）</description>
+依赖：Harmony（必需）、Royalty（必需）、Ideology（可选）
+
+---
+ENGLISH
+
+"Appearance of emptiness, substance in concealment." — Just build the outer wall of a monument and the empty interior still counts as "complete."
+
+After researching the "Empty City Strategy" technology, select any monument to switch it into Empty City mode; the blueprint is automatically simplified to the outer wall only. But nothing deceives fate for long: during the protection period there is a daily chance you will be discovered. Once exposed, the quest fails and relations sour.
+
+[CORE MECHANICS]
+· Empty City mode: one-click switch, finishing the outer wall counts as completion
+· Exposure check: daily chance of discovery during protection (default 1%, adjustable 0%~100%)
+· Relationship penalty applies immediately (default 25 points, adjustable 1~100)
+· A punitive raid from the questing faction triggers after 4 hours, with an hourly countdown warning
+
+[SCRAPEGOAT RITUAL]
+After exposure, you may hold a Scapegoat Ritual to banish a chosen full-timer or intern yourself:
+· Monument Gizmo: select the exposed monument and click "Scapegoat Ritual"
+Holding it within 4 hours blocks the raid; within 24 hours you can revert part of the relationship penalty (default 70%, adjustable)
+
+[PUBLICITY RITUAL]
+A completed monument can hold a Publicity Ritual to refresh a new monument quest:
+· Monument Gizmo: click the "Publicity Ritual" button (default cooldown 5 days)
+· Reaching at least "Good" ritual quality refreshes a new quest
+
+[SETTINGS]
+· Research points 0~1000 (default 200)
+· Daily discovery chance 0%~100% (default 1%)
+· Relationship penalty 1~100 (default 25)
+· Scapegoat revert ratio 0%~100% (default 70%)
+· Monument quest spawn bonus (toggle + multiplier 1x~50x, default off)
+· Publicity ritual refresh chance 0%~100% (default 100%)
+
+Dependencies: Harmony (required), Royalty (required), Ideology (optional)</description>
 </ModMetaData>

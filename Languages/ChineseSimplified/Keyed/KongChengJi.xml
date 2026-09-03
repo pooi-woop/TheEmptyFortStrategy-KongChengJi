@@ -64,6 +64,10 @@
   <KCJ_Ceremony_Start_Button>开始仪式</KCJ_Ceremony_Start_Button>
   <KCJ_Ceremony_NoParticipants>请至少选择一名参与者</KCJ_Ceremony_NoParticipants>
 
+  <!-- 宣传仪式全息 HUD（屏幕顶部常驻进度条） -->
+  <KCJ_HUD_Title>宣传仪式进行中</KCJ_HUD_Title>
+  <KCJ_HUD_Remaining>剩余 {0}</KCJ_HUD_Remaining>
+
   <!-- 宣传仪式开始通知 -->
   <KCJ_Ceremony_Start_Title>空城计 · 宣传仪式开始</KCJ_Ceremony_Start_Title>
   <KCJ_Ceremony_Start_Text>宣传仪式已开始！将持续 {0} 小时。\n\n仪式结束后根据质量决定委托方送来的纪念碑任务好坏。</KCJ_Ceremony_Start_Text>

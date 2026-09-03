@@ -16,6 +16,7 @@
   <RitualOutcomeEffectDef>
     <defName>KCJ_MonumentRefreshEffect</defName>
     <label>空城计-宣传</label>
+    <!-- 注意：RitualOutcomeEffectDef 在 1.6 无 iconPath 字段，之前放在这里会导致 XML 加载红字，故图标省略 -->
     <description>在"编辑文化"中把该效果选到某场仪式上后，当这场仪式以"良好及以上"的质量结束时，按 Mod 设置里的可调概率（默认 100%）刷新一座新的纪念碑建造任务——宣传作势，委托方更加青睐。</description>
     <workerClass>PooiKongChengJi.RitualOutcomeEffectWorker_KongChengJiMonument</workerClass>
     <givesDevelopmentPoints>false</givesDevelopmentPoints>
@@ -80,6 +81,7 @@
   <RitualOutcomeEffectDef>
     <defName>KCJ_BlameShiftEffect</defName>
     <label>空城计-顶罪</label>
+    <!-- 同 KCJ_MonumentRefreshEffect：RitualOutcomeEffectDef 无 iconPath 字段，图标省略以避免 XML 红字 -->
     <description>若「空城计」败露，可在败露后4小时内举行此仪式阻止袭击，24小时内举行仍可减少关系惩罚。在仪式中放逐一名「正式员工」（殖民者）或「实习生」（奴隶），以撤销70%（可调）的败露关系惩罚。</description>
     <workerClass>PooiKongChengJi.RitualOutcomeEffectWorker_KongChengJiBlameShift</workerClass>
     <givesDevelopmentPoints>false</givesDevelopmentPoints>

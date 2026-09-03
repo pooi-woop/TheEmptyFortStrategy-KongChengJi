@@ -932,6 +932,92 @@ namespace PooiKongChengJi
         }
 
         /// <summary>
+        /// 屏幕常驻全息 HUD：宣传仪式进行时在屏幕顶部居中绘制进度条，
+        /// 即使未选中纪念碑也能看到仪式的实时进度与剩余时间。
+        /// </summary>
+        public override void GameComponentOnGUI()
+        {
+            if (activeCeremony == null || activeCeremony.completed || activeCeremony.startTick < 0)
+            {
+                return;
+            }
+            try
+            {
+                DrawCeremonyHUD();
+            }
+            catch (System.Exception ex)
+            {
+                Log.WarningOnce("[KongChengJi] HUD draw error: " + ex, 910011);
+            }
+        }
+
+        /// <summary>绘制宣传仪式全息进度 HUD（顶部居中、半透明暗蓝面板 + 青色进度条 + 剩余时间）。</summary>
+        private void DrawCeremonyHUD()
+        {
+            CeremonyState cer = activeCeremony;
+            float progress = Mathf.Clamp01(cer.Progress);
+
+            // 剩余游戏内时间
+            int remainingTicks = Mathf.Max(cer.durationTicks - cer.ElapsedTicks, 0);
+            int remHours = remainingTicks / 2500;
+            int remMinutes = Mathf.Max((remainingTicks % 2500) * 60 / 2500, 1);
+            string timeStr = remHours > 0
+                ? "KCJ_Time_HoursMinutes".Translate(remHours, remMinutes)
+                : "KCJ_Time_Minutes".Translate(remMinutes);
+
+            const float pad = 8f;
+            const float titleH = 22f;
+            const float barH = 16f;
+            const float infoH = 20f;
+            const float gap = 5f;
+            const float w = 380f;
+            float h = pad + titleH + gap + barH + gap + infoH + pad;
+            float x = (UI.screenWidth - w) / 2f;
+            float y = 8f;
+
+            Rect panel = new Rect(x, y, w, h);
+
+            // 全息面板背景（半透明暗蓝）
+            GUI.color = new Color(0f, 0.16f, 0.24f, 0.55f);
+            GUI.DrawTexture(panel, BaseContent.WhiteTex);
+
+            // 标题
+            GUI.color = new Color(0.6f, 0.95f, 1f);
+            Text.Font = GameFont.Small;
+            Text.Anchor = TextAnchor.MiddleLeft;
+            Widgets.Label(new Rect(panel.x + pad, panel.y + pad, panel.width - pad * 2f, titleH),
+                "KCJ_HUD_Title".Translate());
+            Text.Anchor = TextAnchor.UpperLeft;
+            GUI.color = Color.white;
+
+            // 进度条（底 + 填充 + 边框）
+            Rect barBox = new Rect(panel.x + pad, panel.y + pad + titleH + gap, panel.width - pad * 2f, barH);
+            GUI.color = new Color(0f, 0f, 0f, 0.7f);          // 底色
+            GUI.DrawTexture(barBox, BaseContent.WhiteTex);
+            GUI.color = new Color(0.1f, 0.75f, 0.88f);        // 进度填充（全息青）
+            GUI.DrawTexture(new Rect(barBox.x, barBox.y, barBox.width * progress, barBox.height), BaseContent.WhiteTex);
+            GUI.color = new Color(0.3f, 0.85f, 1f);           // 进度条描边
+            Widgets.DrawBox(barBox, 1);
+            GUI.color = Color.white;
+
+            // 百分比（左） + 剩余时间（右）
+            Text.Font = GameFont.Tiny;
+            Text.Anchor = TextAnchor.MiddleLeft;
+            Widgets.Label(new Rect(barBox.x, barBox.y + barBox.height + gap, barBox.width * 0.5f, infoH),
+                (progress * 100f).ToString("F0") + "%");
+            Text.Anchor = TextAnchor.MiddleRight;
+            Widgets.Label(new Rect(barBox.x + barBox.width * 0.5f, barBox.y + barBox.height + gap, barBox.width * 0.5f, infoH),
+                "KCJ_HUD_Remaining".Translate(timeStr));
+            Text.Anchor = TextAnchor.UpperLeft;
+            GUI.color = Color.white;
+
+            // 全息外边框
+            GUI.color = new Color(0.2f, 0.7f, 0.85f, 0.85f);
+            Widgets.DrawBox(panel, 1);
+            GUI.color = Color.white;
+        }
+
+        /// <summary>
         /// 检查所有败露事件，触发延迟袭击，并发送倒计时提醒。
         /// </summary>
         private void TickDelayedAttacks()
@@ -1935,107 +2021,17 @@ namespace PooiKongChengJi
     }
 
     // ====================================================================
-    // 宣传仪式自动触发：任何仪式结束时（质量良好以上）自动尝试刷新纪念碑任务。
-    // 无需在文化编辑中配置，空城计研究完成后自动生效。
-    // 同时保留文化编辑中配置的效果，互不冲突。
+    // 宣传仪式自动触发已移除：
+    // 原先这里用反射把 Harmony Postfix 广播到所有
+    // RitualOutcomeEffectWorker_FromQuality 子类（含血族/圣物等全部文化仪式），
+    // 极易干扰非本模组的仪式并造成循环红字。
+    // 现改为仅在文化编辑中把 KCJ_MonumentRefreshEffect 挂载到某场仪式上时，
+    // 由 RitualOutcomeEffectWorker_KongChengJiMonument 触发刷新纪念碑任务，
+    // 不再对全游戏仪式兜底处理。
     //
-    // 注意：RitualOutcomeEffectWorker_FromQuality.Apply 是虚方法，
-    // 子类重写后基类补丁不触发。因此我们用 Prepare() 在运行时动态
-    // 补丁所有继承自 _FromQuality 的子类的 Apply 方法。
+    // 宣传/顶罪仪式的核心逻辑（Dialog_PropagandaCeremony -> StartCeremony ->
+    // CompleteCeremony -> TryManualPropaganda）不受影响，依旧可用。
     // ====================================================================
-    [HarmonyPatch]
-    public static class Patch_PropagandaAutoTrigger
-    {
-        private static MethodInfo _getQualityMethod;
-
-        private static MethodInfo GetQualityMethod
-        {
-            get
-            {
-                if (_getQualityMethod == null)
-                {
-                    _getQualityMethod = AccessTools.Method(typeof(RitualOutcomeEffectWorker_FromQuality), "GetQuality");
-                }
-                return _getQualityMethod;
-            }
-        }
-
-        /// <summary>
-        /// Prepare() 中动态补丁所有继承自 RitualOutcomeEffectWorker_FromQuality 的类的 Apply 方法。
-        /// 返回 false 阻止属性级别的默认补丁，因为我们手动处理。
-        /// </summary>
-        public static bool Prepare()
-        {
-            var baseType = typeof(RitualOutcomeEffectWorker_FromQuality);
-            var postfix = AccessTools.Method(typeof(Patch_PropagandaAutoTrigger), nameof(Postfix));
-            var harmony = new Harmony("pooiwoop.kongchengji.autopropaganda");
-
-            foreach (Type type in GenTypes.AllTypes)
-            {
-                if (type == baseType || !baseType.IsAssignableFrom(type))
-                {
-                    continue;
-                }
-
-                // 检查该子类是否重写了 Apply 方法
-                MethodInfo method = type.GetMethod("Apply", new[] { typeof(float), typeof(Dictionary<Pawn, int>), typeof(LordJob_Ritual) });
-                if (method != null && method.DeclaringType == type)
-                {
-                    harmony.Patch(method, postfix: new HarmonyMethod(postfix));
-                }
-            }
-
-            return false; // 防止属性级别的默认补丁
-        }
-
-        public static void Postfix(RitualOutcomeEffectWorker_FromQuality __instance, float progress, LordJob_Ritual jobRitual)
-        {
-            if (!ModsConfig.IdeologyActive || Current.Game == null || jobRitual == null)
-            {
-                return;
-            }
-
-            // 检查空城计研究是否完成
-            var proj = DefDatabase<ResearchProjectDef>.GetNamedSilentFail("KCJ_EmptyCityStrategy");
-            if (proj == null || !proj.IsFinished)
-            {
-                return;
-            }
-
-            // 检查设置
-            KongChengJiSettings s = KongChengJiMod.settings;
-            if (s == null || s.ritualMonumentChancePercent <= 0f)
-            {
-                return;
-            }
-
-            // 计算仪式质量
-            float quality = 0f;
-            try
-            {
-                quality = (float)GetQualityMethod.Invoke(__instance, new object[] { jobRitual, progress });
-            }
-            catch
-            {
-                return;
-            }
-
-            // 良好及以上 (0.6)
-            if (quality < KongChengJiHelpers.RitualGoodQuality)
-            {
-                return;
-            }
-
-            // 按概率刷新纪念碑任务
-            float chance = Mathf.Min(s.ritualMonumentChancePercent, 100f);
-            if (!Rand.Chance(chance / 100f))
-            {
-                return;
-            }
-
-            KongChengJiHelpers.TryRefreshMonumentQuest();
-        }
-    }
 
     /// <summary>
     /// 宣传仪式对话框：选择参与者，查看质量预览，然后开始仪式。
