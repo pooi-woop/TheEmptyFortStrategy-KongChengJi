@@ -50,7 +50,7 @@
 
   <!-- Propaganda Gizmo (auto-displayed, no culture setup needed) -->
   <KCJ_Propaganda_Gizmo_Label>Propaganda</KCJ_Propaganda_Gizmo_Label>
-  <KCJ_Propaganda_Gizmo_Desc>Hold a propaganda ceremony lasting {0} hours to attract attention.\n\nAfter the ceremony ends, the quality is calculated based on participants and surroundings. Good or above quality will refresh a new monument (build & protect) quest.\n\nNo cultural meme or extra setup required — available once the monument is completed.\n\nCooldown: {1} day(s).</KCJ_Propaganda_Gizmo_Desc>
+  <KCJ_Propaganda_Gizmo_Desc>Hold a propaganda ceremony lasting {0} hours to attract attention.\n\nAfter the ceremony ends, the quality is calculated based on participants and surroundings. Good or above quality will refresh a new monument (build &amp; protect) quest.\n\nNo cultural meme or extra setup required — available once the monument is completed.\n\nCooldown: {1} day(s).</KCJ_Propaganda_Gizmo_Desc>
   <KCJ_Propaganda_Gizmo_Desc_Running>Propaganda ceremony in progress ({0}%).</KCJ_Propaganda_Gizmo_Desc_Running>
   <KCJ_Propaganda_Gizmo_Desc_Cooldown>Propaganda on cooldown — {0} hours remaining.\n\nCooldown: {1} day(s).</KCJ_Propaganda_Gizmo_Desc_Cooldown>
   <KCJ_Propaganda_Cooldown_Message>Propaganda is on cooldown ({0} hours remaining).</KCJ_Propaganda_Cooldown_Message>
@@ -122,7 +122,7 @@
   <KCJ_Settings_Boost_Checkbox>Increase monument quest appearance rate</KCJ_Settings_Boost_Checkbox>
   <KCJ_Settings_Boost_Multiplier>Monument quest appearance rate multiplier: {0}x</KCJ_Settings_Boost_Multiplier>
   <KCJ_Settings_Ritual_Title>Cultural Ritual Effect "Empty Fort — Propaganda"</KCJ_Settings_Ritual_Title>
-  <KCJ_Settings_Ritual_Desc>Auto-triggers on any cultural ritual with "Good" or above quality — no need to configure in "Edit Ideogram".\n\nYou can also click the "Propaganda" button on a completed monument to trigger it manually (1-day cooldown).</KCJ_Settings_Ritual_Desc>
+  <KCJ_Settings_Ritual_Desc>After assigning the "Empty Fort — Propaganda" effect to a ritual in Edit Ideogram → ritual effects, when that ritual ends with "Good" or above quality, a new monument (build &amp; protect) quest may be refreshed at the chance below. Requires the Ideology DLC.\n\nYou can also click the "Propaganda" button on a monument to trigger it manually (cooldown set in the settings below).</KCJ_Settings_Ritual_Desc>
   <KCJ_Settings_Ritual_Chance>Chance to refresh a monument quest when ritual quality is Good or above: {0}%</KCJ_Settings_Ritual_Chance>
   <KCJ_Settings_Ritual_Tooltip>"Empty Fort — Propaganda" is a cultural ritual effect. After assigning it to a ritual, if the ritual ends with a quality of "Good" or above, there is this chance to generate a new monument (build and protect) quest.\n\nThis is the "ritual effect trigger" chance, default 100%, adjustable between 0% and 100%. Setting it to 0% means no quest will be generated even if the ritual succeeds.\n\nThis is independent from the "Monument quest (normal) appearance rate" setting above — the above adjusts the frequency of normal monument quests (default 100%); this one adds an extra chance to receive a monument quest after a ritual.</KCJ_Settings_Ritual_Tooltip>
   <KCJ_Settings_Propaganda_Title>"Propaganda Ceremony" (Monument Gizmo, manual trigger)</KCJ_Settings_Propaganda_Title>

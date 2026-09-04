@@ -122,7 +122,7 @@
   <KCJ_Settings_Boost_Checkbox>提高纪念碑任务出现概率</KCJ_Settings_Boost_Checkbox>
   <KCJ_Settings_Boost_Multiplier>纪念碑任务出现概率放大倍数: {0}x</KCJ_Settings_Boost_Multiplier>
   <KCJ_Settings_Ritual_Title>文化仪式效果「空城计-宣传」</KCJ_Settings_Ritual_Title>
-  <KCJ_Settings_Ritual_Desc>自动生效：任何文化仪式达到「良好及以上」质量时自动触发，无需在「编辑文化」中配置。也可在完工的纪念碑上点击「宣传仪式」按钮手动触发（冷却1天）。</KCJ_Settings_Ritual_Desc>
+  <KCJ_Settings_Ritual_Desc>在「编辑文化 → 仪式效果」中把「空城计-宣传」效果选到某场仪式上后，当该仪式以「良好及以上」质量结束时，将按下方概率刷新一座新的纪念碑（建造并保护）任务。需要 Ideology DLC。\n\n也可在纪念碑上点击「宣传仪式」按钮手动触发（冷却天数见下方设置）。</KCJ_Settings_Ritual_Desc>
   <KCJ_Settings_Ritual_Chance>仪式质量良好及以上时刷新纪念碑任务概率: {0}%</KCJ_Settings_Ritual_Chance>
   <KCJ_Settings_Ritual_Tooltip>「空城计-宣传」是一个文化仪式效果：把它选到某场仪式上后，若该仪式结束质量达到「良好及以上」，就有该概率刷新一座新的纪念碑（建造并保护）任务。\n\n这是「仪式效果触发」的概率，默认 100%，可在 0% ~ 100% 之间调节；0% 表示即使仪式成功也不刷新。\n\n它与上方「纪念碑任务（平时）出现概率」互不影响：上方那个调节的是平时委托方送任务的频率（原版默认 100%）；这个是仪式结束后额外再送一座纪念碑的机会。</KCJ_Settings_Ritual_Tooltip>
   <KCJ_Settings_Propaganda_Title>「宣传仪式」（纪念碑 Gizmo 手动触发）</KCJ_Settings_Propaganda_Title>

@@ -19,6 +19,9 @@
   <!-- 作者名 -->
   <author>PooiWoop</author>
 
+  <!-- 项目主页 / 源码仓库 -->
+  <url>https://github.com/pooi-woop/PooiKongChengJi</url>
+
   <!-- 支持的游戏版本 -->
   <supportedVersions>
     <li>1.6</li>
@@ -73,6 +76,8 @@
 
 依赖：Harmony（必需）、Royalty（必需）、Ideology（可选）
 
+欢迎任何形式的贡献与反馈：https://github.com/pooi-woop/PooiKongChengJi
+
 ---
 ENGLISH
 
@@ -104,5 +109,7 @@ A completed monument can hold a Publicity Ritual to refresh a new monument quest
 · Monument quest spawn bonus (toggle + multiplier 1x~50x, default off)
 · Publicity ritual refresh chance 0%~100% (default 100%)
 
-Dependencies: Harmony (required), Royalty (required), Ideology (optional)</description>
+Dependencies: Harmony (required), Royalty (required), Ideology (optional)
+
+Contributions and feedback are welcome: https://github.com/pooi-woop/PooiKongChengJi</description>
 </ModMetaData>
