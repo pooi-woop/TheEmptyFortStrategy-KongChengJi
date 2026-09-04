@@ -20,7 +20,7 @@
   <author>PooiWoop</author>
 
   <!-- 项目主页 / 源码仓库 -->
-  <url>https://github.com/pooi-woop/PooiKongChengJi</url>
+  <url>https://github.com/pooi-woop/TheEmptyFortStrategy-KongChengJi</url>
 
   <!-- 支持的游戏版本 -->
   <supportedVersions>
@@ -76,7 +76,7 @@
 
 依赖：Harmony（必需）、Royalty（必需）、Ideology（可选）
 
-欢迎任何形式的贡献与反馈：https://github.com/pooi-woop/PooiKongChengJi
+欢迎任何形式的贡献与反馈：https://github.com/pooi-woop/TheEmptyFortStrategy-KongChengJi
 
 ---
 ENGLISH
@@ -111,5 +111,5 @@ A completed monument can hold a Publicity Ritual to refresh a new monument quest
 
 Dependencies: Harmony (required), Royalty (required), Ideology (optional)
 
-Contributions and feedback are welcome: https://github.com/pooi-woop/PooiKongChengJi</description>
+Contributions and feedback are welcome: https://github.com/pooi-woop/TheEmptyFortStrategy-KongChengJi</description>
 </ModMetaData>
