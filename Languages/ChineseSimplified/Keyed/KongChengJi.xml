@@ -50,7 +50,7 @@
 
   <!-- 宣传仪式 Gizmo（自动出现，无需文化配置） -->
   <KCJ_Propaganda_Gizmo_Label>宣传仪式</KCJ_Propaganda_Gizmo_Label>
-  <KCJ_Propaganda_Gizmo_Desc>举行宣传仪式，持续 {0} 小时，吸引民众关注。\n\n仪式结束后，按质量结算效果：良好及以上将刷新一座新的纪念碑（建造并保护）任务。\n\n无需文化模因，无需额外设置——纪念碑完工后即可使用。\n\n冷却时间：{1} 天。</KCJ_Propaganda_Gizmo_Desc>
+  <KCJ_Propaganda_Gizmo_Desc>举行宣传仪式，持续 {0} 小时，吸引民众关注。\n\n仪式结束后按质量结算成功率：质量越高，越有机会刷新一座新的纪念碑（建造并保护）任务。\n\n外墙建筑材料越好，仪式成功率越高（只加不减，木材不会降低成功率）。\n\n无需文化模因，无需额外设置——纪念碑完工后即可使用。\n\n冷却时间：{1} 天。</KCJ_Propaganda_Gizmo_Desc>
   <KCJ_Propaganda_Gizmo_Desc_Running>宣传仪式进行中（进度 {0}%）。</KCJ_Propaganda_Gizmo_Desc_Running>
   <KCJ_Propaganda_Gizmo_Desc_Cooldown>宣传仪式冷却中，剩余 {0} 小时。\n\n冷却时间：{1} 天。</KCJ_Propaganda_Gizmo_Desc_Cooldown>
   <KCJ_Propaganda_Cooldown_Message>宣传仪式正在冷却中（剩余 {0} 小时）。</KCJ_Propaganda_Cooldown_Message>
@@ -58,8 +58,9 @@
 
   <!-- 宣传仪式对话框 -->
   <KCJ_Ceremony_Dialog_Title>空城计 · 宣传仪式</KCJ_Ceremony_Dialog_Title>
-  <KCJ_Ceremony_Dialog_Info>举行宣传仪式，持续 {0} 小时，吸引民众关注。\n\n仪式结束后将根据参与人数和场地氛围计算质量，质量越高，委托方送来的纪念碑任务越好。</KCJ_Ceremony_Dialog_Info>
+  <KCJ_Ceremony_Dialog_Info>举行宣传仪式，持续 {0} 小时，吸引民众关注。\n\n仪式结束后将根据参与人数、场地氛围和建筑材料计算质量，质量越高成功率越高。\n\n成功率 = 基础值 + 质量加成 + 建筑材料加成（只加不减）。</KCJ_Ceremony_Dialog_Info>
   <KCJ_Ceremony_Dialog_Quality>参与人数：{0} 人 | 预估质量：{1}%</KCJ_Ceremony_Dialog_Quality>
+  <KCJ_Ceremony_Dialog_SuccessRate>仪式成功率：{0}% （建筑材料加成 {1}%）</KCJ_Ceremony_Dialog_SuccessRate>
   <KCJ_Ceremony_Dialog_Participants>选择参与人员（点击勾选/取消）：</KCJ_Ceremony_Dialog_Participants>
   <KCJ_Ceremony_Start_Button>开始仪式</KCJ_Ceremony_Start_Button>
   <KCJ_Ceremony_NoParticipants>请至少选择一名参与者</KCJ_Ceremony_NoParticipants>
@@ -73,9 +74,11 @@
   <KCJ_Ceremony_Start_Text>宣传仪式已开始！将持续 {0} 小时。\n\n仪式结束后根据质量决定委托方送来的纪念碑任务好坏。</KCJ_Ceremony_Start_Text>
   <KCJ_Ceremony_Start_Message>宣传仪式已开始！持续 {0} 小时。</KCJ_Ceremony_Start_Message>
 
-  <!-- 宣传仪式结束通知（同原版仪式，质量决定效果好坏） -->
+  <!-- 宣传仪式结束通知（同原版仪式，质量决定成功率，抄原版文化仪式逻辑） -->
   <KCJ_Ceremony_Complete_Title>空城计 · 宣传仪式结束</KCJ_Ceremony_Complete_Title>
   <KCJ_Ceremony_Complete_Text>宣传仪式结束，质量 {0}%。\n\n委托方对你的宣传印象深刻，送来了一座新的纪念碑蓝图。</KCJ_Ceremony_Complete_Text>
+  <KCJ_Ceremony_Complete_Text_Success>宣传仪式圆满成功！\n\n仪式质量：{0}%\n仪式成功率：{1}% | 建筑材料加成 +{2}%\n\n委托方对你的宣传印象深刻，送来了一座新的纪念碑蓝图！</KCJ_Ceremony_Complete_Text_Success>
+  <KCJ_Ceremony_Complete_Text_Fail>宣传仪式未能打动委托方。\n\n仪式质量：{0}%\n仪式成功率：{1}% | 建筑材料加成 +{2}%\n\n宣传效果不够理想，下次可以考虑提高仪式质量或使用更好的建筑材料。</KCJ_Ceremony_Complete_Text_Fail>
 
   <!-- 顶罪成功信件 -->
   <KCJ_BlameShift_Letter_Title>空城计 · 顶罪成功</KCJ_BlameShift_Letter_Title>
@@ -129,5 +132,6 @@
   <KCJ_Settings_Propaganda_Duration>宣传仪式持续时间（游戏内小时）: {0}</KCJ_Settings_Propaganda_Duration>
   <KCJ_Settings_Propaganda_Duration_Tooltip>宣传仪式持续的时间长度（游戏内小时）。仪式结束后按质量结算效果。默认 2 小时。</KCJ_Settings_Propaganda_Duration_Tooltip>
   <KCJ_Settings_Propaganda_Cooldown>宣传仪式冷却天数: {0} 天</KCJ_Settings_Propaganda_Cooldown>
+  <KCJ_Settings_Propaganda_BaseSuccessRate>宣传仪式基础成功率: {0}%</KCJ_Settings_Propaganda_BaseSuccessRate>
   <KCJ_Settings_Note>说明：默认再次点击纪念碑的「空城计」按钮即可关闭本模式。</KCJ_Settings_Note>
 </LanguageData>

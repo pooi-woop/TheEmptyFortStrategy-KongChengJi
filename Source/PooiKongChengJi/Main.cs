@@ -605,11 +605,103 @@ namespace PooiKongChengJi
             }
         }
 
-        /// <summary>尝试刷新纪念碑任务，按质量缩放点数。</summary>
-        public void TryManualPropaganda(float quality)
+        /// <summary>获取建筑材料对仪式成功率的加成（0~1，只加不减）。</summary>
+        public float GetBuildingMaterialBonus(MonumentMarker marker)
         {
+            if (marker == null) return 0f;
+
+            MarkerState s = StateFor(marker);
+            if (s.originalSketch == null) return 0f;
+
+            HashSet<IntVec3> occupiedCells = BuildOccupiedCellSet(s.originalSketch);
+
+            float totalBonus = 0f;
+            int count = 0;
+
+            foreach (SketchEntity e in s.originalSketch.Entities)
+            {
+                if (!(e is RimWorld.SketchBuildable)) continue;
+                if (!IsOnOuterPerimeter(occupiedCells, e)) continue;
+
+                ThingDef stuff = GetStuffFromEntity(e);
+                if (stuff == null) continue;
+
+                count++;
+                totalBonus += GetMaterialBonus(stuff);
+            }
+
+            if (count == 0) return 0f;
+
+            // 平均加成，只加不减：木头为0，好材料为正数
+            return totalBonus / count;
+        }
+
+        /// <summary>获取材料对仪式成功率的加成（0=无加成，越高越好）。</summary>
+        private float GetMaterialBonus(ThingDef stuff)
+        {
+            if (stuff == null) return 0f;
+
+            string name = stuff.defName;
+            // 木质材料 - 基础材料，无加成
+            if (name.Contains("Wood") || stuff.stuffProps?.categories?.Any(c => c.defName == "Woody") == true)
+                return 0f;
+            // 石材
+            if (name.Contains("Stone") || stuff.stuffProps?.categories?.Any(c => c.defName == "Stony") == true)
+                return 0.10f;
+            // 钢铁
+            if (name == "Steel")
+                return 0.15f;
+            // 塑钢
+            if (name == "Plasteel")
+                return 0.25f;
+            // 铀
+            if (name == "Uranium")
+                return 0.30f;
+            // 其他材料默认小加成
+            return 0.05f;
+        }
+
+        /// <summary>从SketchEntity中获取stuff材质信息。</summary>
+        private ThingDef GetStuffFromEntity(SketchEntity entity)
+        {
+            // 尝试 SketchThing（墙壁等建筑物使用此类）
+            if (entity is RimWorld.SketchThing st)
+            {
+                return st.stuff;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 计算宣传仪式的总成功率（0~1）。
+        /// 基础成功率 + 质量加成 + 建筑材料加成，抄原版文化仪式逻辑。
+        /// </summary>
+        public float CalculateSuccessRate(float quality, MonumentMarker marker)
+        {
+            float baseRate = (KongChengJiMod.settings?.propagandaBaseSuccessRate ?? 0.5f);
+            // 质量加成：质量 0→0, 1→0.3
+            float qualityBonus = quality * 0.3f;
+            // 建筑材料加成：只加不减
+            float materialBonus = GetBuildingMaterialBonus(marker);
+            return Mathf.Clamp01(baseRate + qualityBonus + materialBonus);
+        }
+
+        /// <summary>
+        /// 尝试刷新纪念碑任务，按质量缩放点数。
+        /// 返回 true 表示成功生成任务。
+        /// </summary>
+        public bool TryManualPropaganda(float quality, MonumentMarker monument)
+        {
+            // 计算成功率
+            float successRate = CalculateSuccessRate(quality, monument);
+            if (!Rand.Chance(successRate))
+            {
+                return false; // 仪式失败，未生成新任务
+            }
+
             float pointsMult = 0.5f + quality * 0.5f; // 质量 0→0.5x, 1→1.0x
             KongChengJiHelpers.TryRefreshMonumentQuest(pointsMult);
+            return true;
         }
 
         /// <summary>开始宣传仪式。</summary>
@@ -682,13 +774,33 @@ namespace PooiKongChengJi
             // 计算质量
             float quality = CalculateCeremonyQuality(monument);
 
-            // 按质量缩放任务点数，质量越高任务越好（同原版仪式逻辑）
-            TryManualPropaganda(quality);
+            // 计算建筑材料加成
+            float materialBonus = monument != null ? GetBuildingMaterialBonus(monument) : 0f;
+            float materialBonusPercent = Mathf.RoundToInt(materialBonus * 100f);
+
+            // 计算成功率并尝试刷新纪念碑任务（抄原版文化仪式逻辑：质量越高成功率越高）
+            bool success = TryManualPropaganda(quality, monument);
+            float successRate = CalculateSuccessRate(quality, monument);
+            int successRatePercent = Mathf.RoundToInt(successRate * 100f);
 
             // 根据质量决定信件的积极程度（同原版仪式）
             LetterDef letterDef = quality >= 0.6f ? LetterDefOf.PositiveEvent : LetterDefOf.NeutralEvent;
             string letterTitle = "KCJ_Ceremony_Complete_Title".Translate();
-            string letterText = "KCJ_Ceremony_Complete_Text".Translate((quality * 100f).ToString("F0"));
+            string letterText;
+            if (success)
+            {
+                letterText = "KCJ_Ceremony_Complete_Text_Success".Translate(
+                    (quality * 100f).ToString("F0"),
+                    successRatePercent.ToString("F0"),
+                    materialBonusPercent.ToString("F0"));
+            }
+            else
+            {
+                letterText = "KCJ_Ceremony_Complete_Text_Fail".Translate(
+                    (quality * 100f).ToString("F0"),
+                    successRatePercent.ToString("F0"),
+                    materialBonusPercent.ToString("F0"));
+            }
 
             Find.LetterStack.ReceiveLetter(letterTitle, letterText, letterDef, monument);
 
@@ -1668,6 +1780,10 @@ namespace PooiKongChengJi
                 tooltip: "KCJ_Settings_Propaganda_Duration_Tooltip".Translate());
             ls.Label("KCJ_Settings_Propaganda_Cooldown".Translate(settings.propagandaCooldownDays));
             settings.propagandaCooldownDays = (int)ls.Slider(settings.propagandaCooldownDays, 1, 30);
+            ls.Label("KCJ_Settings_Propaganda_BaseSuccessRate".Translate((settings.propagandaBaseSuccessRate * 100f).ToString("F0")));
+            settings.propagandaBaseSuccessRate = ls.Slider(settings.propagandaBaseSuccessRate, 0.1f, 1f) / 1f;
+            // 修复Slider返回值
+            if (settings.propagandaBaseSuccessRate < 0.1f) settings.propagandaBaseSuccessRate = 0.1f;
 
             ls.Gap(16f);
             ls.Label("KCJ_Settings_Note".Translate());
@@ -1700,6 +1816,7 @@ namespace PooiKongChengJi
         // 空城计宣传仪式
         public float propagandaDurationHours = 2f;          // 仪式持续时长（游戏内小时，默认 2 小时 = 5000 ticks）
         public int propagandaCooldownDays = 5;               // 仪式冷却天数（默认 5 天）
+        public float propagandaBaseSuccessRate = 0.5f;       // 宣传仪式基础成功率（默认50%）
 
         // 空城计-顶罪
         public float blameShiftPercent = 70f;   // 顶罪仪式撤销关系惩罚的比例（默认 70%）
@@ -1714,6 +1831,7 @@ namespace PooiKongChengJi
             Scribe_Values.Look(ref ritualMonumentChancePercent, "ritualMonumentChancePercent", 100f);
             Scribe_Values.Look(ref propagandaDurationHours, "propagandaDurationHours", 2f);
             Scribe_Values.Look(ref propagandaCooldownDays, "propagandaCooldownDays", 5);
+            Scribe_Values.Look(ref propagandaBaseSuccessRate, "propagandaBaseSuccessRate", 0.5f);
             Scribe_Values.Look(ref blameShiftPercent, "blameShiftPercent", 70f);
         }
     }
@@ -2044,7 +2162,7 @@ namespace PooiKongChengJi
         private readonly HashSet<int> selectedIds = new HashSet<int>();
         private Vector2 scrollPosition;
 
-        public override Vector2 InitialSize => new Vector2(480f, 520f);
+        public override Vector2 InitialSize => new Vector2(480f, 560f);
 
         public Dialog_PropagandaCeremony(MonumentMarker marker, GameComponent_KongChengJi component)
         {
@@ -2096,6 +2214,15 @@ namespace PooiKongChengJi
             float quality = CalculatePreviewQuality(count, monument);
             Widgets.Label(new Rect(inRect.x + 4f, y, inRect.width - 20f, 22f),
                 "KCJ_Ceremony_Dialog_Quality".Translate(count, (quality * 100f).ToString("F0")));
+            y += 26f;
+
+            // 成功率预览（含建筑材料加成）
+            float successRate = comp.CalculateSuccessRate(quality, monument);
+            float materialBonus = comp.GetBuildingMaterialBonus(monument);
+            int materialBonusPercent = Mathf.RoundToInt(materialBonus * 100f);
+            int successRatePercent = Mathf.RoundToInt(successRate * 100f);
+            Widgets.Label(new Rect(inRect.x + 4f, y, inRect.width - 20f, 22f),
+                "KCJ_Ceremony_Dialog_SuccessRate".Translate(successRatePercent.ToString("F0"), materialBonusPercent.ToString("F0")));
             y += 26f;
 
             // 分隔线
