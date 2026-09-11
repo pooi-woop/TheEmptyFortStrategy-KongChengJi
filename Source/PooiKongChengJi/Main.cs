@@ -1026,7 +1026,6 @@ namespace PooiKongChengJi
                 return;
             }
 
-            HashSet<int> referencedIds = new HashSet<int>();
             foreach (Quest q in quests)
             {
                 if (q == null || q.State != QuestState.Ongoing)
@@ -1039,7 +1038,6 @@ namespace PooiKongChengJi
                 {
                     continue;
                 }
-                referencedIds.Add(m.thingIDNumber);
 
                 MarkerState s = StateFor(m);
                 if (!s.kongChengJi || s.discovered)
@@ -1072,8 +1070,28 @@ namespace PooiKongChengJi
                 }
             }
 
-            // 清理：已发现 / 已关闭 / 不再被进行中任务引用的状态
-            states.RemoveAll(s => s.discovered || !s.kongChengJi || !referencedIds.Contains(s.id));
+            // ---------- 状态清理：跟随标记存活，而不是跟随任务引用 ----------
+            // 旧逻辑（任务没引用就移除状态）有个致命坑：任务查询瞬时失败（阶段切换/读档窗口）
+            // 会把状态洗掉，而草图仍处于"外墙替换态"，之后开关显示"关"、重新选料却按外墙计算；
+            // 更糟的是此时再开空城计会把外墙草图当"原图"存下来，完整蓝图永久丢失（实测踩坑）。
+            // 现在只要标记还存在、未完工且模式开着，状态一律保留。
+            if (Find.TickManager.TicksGame % 120 == 0)
+            {
+                for (int i = states.Count - 1; i >= 0; i--)
+                {
+                    MarkerState s = states[i];
+                    if (s == null || !s.kongChengJi || s.discovered)
+                    {
+                        states.RemoveAt(i);
+                        continue;
+                    }
+                    MonumentMarker m = FindMarkerById(s.id);
+                    if (m == null || m.Destroyed || m.complete)
+                    {
+                        states.RemoveAt(i);
+                    }
+                }
+            }
 
             // ---------- 宣传仪式 tick ----------
             TickCeremony();
@@ -1576,6 +1594,33 @@ namespace PooiKongChengJi
             return null;
         }
 
+        /// <summary>按 thingIDNumber 全局查找纪念碑标记（含地图上已生成的与打包成迷你件的）。</summary>
+        private static MonumentMarker FindMarkerById(int id)
+        {
+            if (Find.Maps == null)
+            {
+                return null;
+            }
+            foreach (Map map in Find.Maps)
+            {
+                foreach (Thing t in map.listerThings.ThingsOfDef(ThingDefOf.MonumentMarker))
+                {
+                    if (!t.Destroyed && t.thingIDNumber == id)
+                    {
+                        return (MonumentMarker)t;
+                    }
+                }
+                foreach (Thing t in map.listerThings.ThingsOfDef(ThingDefOf.MinifiedThing))
+                {
+                    if (t is MinifiedThing min && min.InnerThing is MonumentMarker mm && !mm.Destroyed && mm.thingIDNumber == id)
+                    {
+                        return mm;
+                    }
+                }
+            }
+            return null;
+        }
+
         // ---------- 外墙提取工具 ----------
 
         /// <summary>计算原始蓝图中所有被占用的格子。</summary>
@@ -1624,7 +1669,9 @@ namespace PooiKongChengJi
                 }
                 if (IsOnOuterPerimeter(occupiedCells, e))
                 {
-                    newSketch.Add(e, false);
+                    // 必须放深拷贝：Sketch.Add 只是把实体引用加进目标草图，
+                    // 直接加会让"外墙草图"与"完整原图"共享实体，任何一方被清理都会破坏对方
+                    newSketch.Add(e.DeepCopy(), false);
                 }
             }
             return newSketch;
