@@ -13,6 +13,23 @@ using Verse.AI.Group;
 
 namespace PooiKongChengJi
 {
+    /// <summary>详细调试日志输出（可在 mod 设置里关闭）。所有日志带 [KongChengJi] 前缀。</summary>
+    internal static class KongChengJiLog
+    {
+        internal static void Log(string msg)
+        {
+            if (KongChengJiMod.settings == null || KongChengJiMod.settings.verboseLogging)
+            {
+                Verse.Log.Message("[KongChengJi] " + msg);
+            }
+        }
+
+        internal static void Warn(string msg)
+        {
+            Verse.Log.Warning("[KongChengJi] " + msg);
+        }
+    }
+
     /// <summary>
     /// 空城计 (KongChengJi) —— 主逻辑
     /// =================================================
@@ -161,17 +178,13 @@ namespace PooiKongChengJi
             // ---- 空城计切换按钮（仅对未完工且已研究的纪念碑） ----
             if (marker.Spawned && !marker.AllDone && ResearchActive())
             {
-                // SMQ 适配：已选料施工（转换）的纪念碑材料已按当前草图锁定，禁止切换空城计
-                bool smqLocked = SmqCompat.IsSmqMarker(marker) && SmqCompat.IsConverted(marker);
                 yield return new Command_Toggle
                 {
                     icon = KongChengJiAssets.iconText,
                     defaultLabel = "KCJ_Gizmo_Label".Translate(),
                     defaultDesc = "KCJ_Gizmo_Desc".Translate(),
                     isActive = () => comp.IsKongChengJi(marker),
-                    toggleAction = () => comp.Toggle(marker),
-                    Disabled = smqLocked,
-                    disabledReason = smqLocked ? "KCJ_SMQ_Locked".Translate() : null
+                    toggleAction = () => comp.Toggle(marker)
                 };
             }
 
@@ -904,15 +917,14 @@ namespace PooiKongChengJi
             {
                 return;
             }
-            // SMQ 适配：材料需求在选料时按当前草图一次性算死。
-            // 若已选料施工后才切换空城计，材料不会跟着变，还会造成"按外墙算料后关掉空城计白嫖"的漏洞，
-            // 因此已转换（选料）的 SMQ 纪念碑锁定切换，直到取消施工/重装标记重置为止。
-            if (SmqCompat.IsSmqMarker(m) && SmqCompat.IsConverted(m))
-            {
-                Messages.Message("KCJ_SMQ_Locked".Translate(), m, MessageTypeDefOf.RejectInput);
-                return;
-            }
+            bool isSmq = SmqCompat.IsSmqMarker(m);
+            bool converted = isSmq && SmqCompat.IsConverted(m);
             var s = StateFor(m);
+            KongChengJiLog.Log("Toggle: marker=" + m.thingIDNumber
+                + " isSmq=" + isSmq + " converted=" + converted
+                + " currentKcj=" + s.kongChengJi
+                + " sketchEntities=" + (m.sketch != null ? m.sketch.Entities.Count : -1)
+                + " originalSketch=" + (s.originalSketch != null ? s.originalSketch.Entities.Count.ToString() : "null"));
             if (s.kongChengJi)
             {
                 Disable(m, s);
@@ -928,23 +940,50 @@ namespace PooiKongChengJi
         {
             if (m == null || !m.Spawned)
             {
+                KongChengJiLog.Warn("Enable aborted: marker null or not spawned (id=" + (m != null ? m.thingIDNumber.ToString() : "null") + ")");
                 return;
             }
+            bool isSmq = SmqCompat.IsSmqMarker(m);
             if (s.originalSketch == null && m.sketch != null)
             {
                 s.originalSketch = m.sketch.DeepCopy();
+                KongChengJiLog.Log("Enable: saved original sketch for marker=" + m.thingIDNumber
+                    + " entities=" + s.originalSketch.Entities.Count);
             }
             if (s.originalSketch != null)
             {
-                // SMQ 适配：开启空城计同样把草图替换为"只有外墙"的版本。
-                // SMQ 选料时按草图重新计算 1x1 纪念碑的材料需求，于是材料只算外墙部分，内部结构全部忽略。
-                m.sketch = BuildOuterWallSketch(s.originalSketch);
+                // 开启空城计：把草图替换为"只有外墙"的版本。
+                // 对 SMQ 纪念碑，选料时按草图重新计算 1x1 纪念碑的材料需求，
+                // 于是材料只算外墙部分，内部结构全部忽略。
+                Sketch swapped = BuildOuterWallSketch(s.originalSketch);
+                KongChengJiLog.Log("Enable: marker=" + m.thingIDNumber + " isSmq=" + isSmq
+                    + " originalEntities=" + s.originalSketch.Entities.Count
+                    + " outerWallEntities=" + swapped.Entities.Count);
+                if (swapped.Entities.Count >= s.originalSketch.Entities.Count)
+                {
+                    // 完整蓝图的外墙一定少于其全部实体；两者相当说明 originalSketch 已经被旧版 bug
+                    // 污染成了外墙草图（数据无法自愈），提示玩家换新任务
+                    KongChengJiLog.Warn("Enable: marker=" + m.thingIDNumber
+                        + " stored original sketch (" + s.originalSketch.Entities.Count
+                        + " entities) is not larger than its outer wall (" + swapped.Entities.Count
+                        + ") - this state was likely poisoned by the old cleanup bug. Cancel this monument quest and accept a new one to reset.");
+                }
+                m.sketch = swapped;
                 // 与原版的差异：不执行 DestroyInternalBuildableThings——
                 // SMQ 的蓝图/框架位于标记原点，可能撞上原草图"内部"实体的格子，不能误删。
-                if (!SmqCompat.IsSmqMarker(m))
+                if (!isSmq)
                 {
                     DestroyInternalBuildableThings(m, s.originalSketch);
                 }
+                // SMQ：按当前（外墙）草图立即重算材料需求，选过料也照样生效
+                if (isSmq)
+                {
+                    SmqCompat.RecomputeRequirements(m);
+                }
+            }
+            else
+            {
+                KongChengJiLog.Warn("Enable: marker=" + m.thingIDNumber + " has no sketch to swap!");
             }
             s.kongChengJi = true;
             s.discovered = false;
@@ -952,25 +991,32 @@ namespace PooiKongChengJi
             s.isProtected = false;
             SoundDefOf.Click.PlayOneShotOnCamera();
             Messages.Message(
-                SmqCompat.IsSmqMarker(m) ? "KCJ_SMQ_Enabled_Message".Translate() : "KCJ_Enabled_Message".Translate(),
+                isSmq ? "KCJ_SMQ_Enabled_Message".Translate() : "KCJ_Enabled_Message".Translate(),
                 m, MessageTypeDefOf.NeutralEvent);
         }
 
         public void Disable(MonumentMarker m, MarkerState s)
         {
-            if (SmqCompat.IsSmqMarker(m) && SmqCompat.IsConverted(m))
-            {
-                Messages.Message("KCJ_SMQ_Locked".Translate(), m, MessageTypeDefOf.RejectInput);
-                return;
-            }
+            bool isSmq = SmqCompat.IsSmqMarker(m);
+            KongChengJiLog.Log("Disable: marker=" + (m != null ? m.thingIDNumber.ToString() : "null")
+                + " isSmq=" + isSmq
+                + " originalSketch=" + (s.originalSketch != null ? s.originalSketch.Entities.Count.ToString() : "null")
+                + " sketchEntities=" + (m != null && m.sketch != null ? m.sketch.Entities.Count : -1));
             if (m != null && s.originalSketch != null && m.Spawned)
             {
                 m.sketch = s.originalSketch;
+                KongChengJiLog.Log("Disable: restored full sketch for marker=" + m.thingIDNumber
+                    + " entities=" + m.sketch.Entities.Count);
+                // SMQ：按还原后的完整草图立即重算材料需求（恢复全价），选过料也照样生效
+                if (isSmq)
+                {
+                    SmqCompat.RecomputeRequirements(m);
+                }
             }
             s.kongChengJi = false;
             SoundDefOf.Click.PlayOneShotOnCamera();
             Messages.Message(
-                SmqCompat.IsSmqMarker(m) ? "KCJ_SMQ_Disabled_Message".Translate() : "KCJ_Disabled_Message".Translate(),
+                isSmq ? "KCJ_SMQ_Disabled_Message".Translate() : "KCJ_Disabled_Message".Translate(),
                 m, MessageTypeDefOf.NeutralEvent);
         }
 
@@ -1088,6 +1134,8 @@ namespace PooiKongChengJi
                     MonumentMarker m = FindMarkerById(s.id);
                     if (m == null || m.Destroyed || m.complete)
                     {
+                        KongChengJiLog.Log("State cleanup: removed state for marker=" + s.id
+                            + " (marker " + (m == null ? "gone" : m.Destroyed ? "destroyed" : "complete") + ")");
                         states.RemoveAt(i);
                     }
                 }
@@ -1658,9 +1706,11 @@ namespace PooiKongChengJi
             var newSketch = new Sketch();
             if (orig == null)
             {
+                KongChengJiLog.Warn("BuildOuterWallSketch: original sketch is null!");
                 return newSketch;
             }
             HashSet<IntVec3> occupiedCells = BuildOccupiedCellSet(orig);
+            int added = 0, skipped = 0;
             foreach (SketchEntity e in orig.Entities)
             {
                 if (!(e is RimWorld.SketchBuildable))
@@ -1670,10 +1720,23 @@ namespace PooiKongChengJi
                 if (IsOnOuterPerimeter(occupiedCells, e))
                 {
                     // 必须放深拷贝：Sketch.Add 只是把实体引用加进目标草图，
-                    // 直接加会让"外墙草图"与"完整原图"共享实体，任何一方被清理都会破坏对方
-                    newSketch.Add(e.DeepCopy(), false);
+                    // 直接加会让"外墙草图"与"完整原图"共享实体，任何一方被清理都会破坏对方。
+                    var copy = e.DeepCopy();
+                    // 先试不清除碰撞（正常草图的外墙实体互不重叠）；真重叠时退回清除模式，保证外围结构不丢
+                    if (!newSketch.Add(copy, false))
+                    {
+                        newSketch.Add(copy, true);
+                    }
+                    added++;
+                }
+                else
+                {
+                    skipped++;
                 }
             }
+            KongChengJiLog.Log("BuildOuterWallSketch: original=" + orig.Entities.Count
+                + " kept(outer)=" + added + " skipped(interior)=" + skipped
+                + " resultEntities=" + newSketch.Entities.Count);
             return newSketch;
         }
 
@@ -1888,6 +1951,8 @@ namespace PooiKongChengJi
             if (settings.propagandaBaseSuccessRate < 0.1f) settings.propagandaBaseSuccessRate = 0.1f;
 
             ls.Gap(16f);
+            ls.CheckboxLabeled("KCJ_Settings_VerboseLogging".Translate(), ref settings.verboseLogging);
+            ls.Gap(8f);
             ls.Label("KCJ_Settings_Note".Translate());
             ls.End();
 
@@ -1923,6 +1988,9 @@ namespace PooiKongChengJi
         // 空城计-顶罪
         public float blameShiftPercent = 70f;   // 顶罪仪式撤销关系惩罚的比例（默认 70%）
 
+        // 详细调试日志（排查 SMQ 兼容问题时使用，默认开启）
+        public bool verboseLogging = true;
+
         public override void ExposeData()
         {
             Scribe_Values.Look(ref discoverChancePercent, "discoverChancePercent", 1f);
@@ -1935,6 +2003,7 @@ namespace PooiKongChengJi
             Scribe_Values.Look(ref propagandaCooldownDays, "propagandaCooldownDays", 5);
             Scribe_Values.Look(ref propagandaBaseSuccessRate, "propagandaBaseSuccessRate", 0.5f);
             Scribe_Values.Look(ref blameShiftPercent, "blameShiftPercent", 70f);
+            Scribe_Values.Look(ref verboseLogging, "verboseLogging", true);
         }
     }
 

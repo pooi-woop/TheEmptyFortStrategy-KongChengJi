@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using HarmonyLib;
 using RimWorld;
 using UnityEngine;
@@ -18,8 +19,8 @@ namespace PooiKongChengJi
     ///      必须额外给 MonumentMarker_Simple.GetGizmos 打一个同样的后缀补丁，空城计按钮才会出现；
     ///   2. SMQ 按标记上的草图重新计算 1x1 单体纪念碑的材料需求（TryConvert 遍历 sketch.Buildables）。
     ///      因此空城计模式对 SMQ 纪念碑的处理与原版一致：开启时把草图替换为"只有外墙"的版本，
-    ///      SMQ 随后选料时计算出的材料需求就只包含外墙部分，内部结构一律不计；
-    ///      关闭时还原完整草图（仅限尚未选料施工时，已选料则锁定切换防止白嫖）。
+    ///      关闭时还原完整草图，并且每次切换后都强制 SMQ 按当前草图重算材料需求——
+    ///      开关随时生效（含选料施工后），开=外墙价、关=全价。
     ///
     /// 为避免 SMQ 未安装时类型加载失败，这里不引用 SMQ 程序集，全部通过反射访问；
     /// 仅当检测到 SMQ 程序集已加载时才会应用补丁。
@@ -64,7 +65,7 @@ namespace PooiKongChengJi
             return markerType != null && markerType.IsInstanceOfType(marker);
         }
 
-        /// <summary>SMQ 纪念碑是否已完成"选料转换"（材料需求已按当前草图锁定）。</summary>
+        /// <summary>SMQ 纪念碑是否已完成"选料转换"（材料需求已生成）。</summary>
         public static bool IsConverted(MonumentMarker marker)
         {
             if (!IsSmqMarker(marker))
@@ -107,14 +108,93 @@ namespace PooiKongChengJi
                 {
                     harmony.Patch(getGizmos,
                         postfix: new HarmonyMethod(typeof(SmqCompat), nameof(GetGizmosPostfix)));
+                    KongChengJiLog.Log("patched MonumentMarker_Simple.GetGizmos (postfix)");
+                }
+                else
+                {
+                    Log.Warning("[KongChengJi] MonumentMarker_Simple.GetGizmos not found!");
                 }
 
-                Log.Message("[KongChengJi] Simple Monument Quest compatibility patched: gizmos + outer-wall sketch swap.");
+                var tryConvert = AccessTools.Method(markerType, "TryConvert");
+                if (tryConvert != null)
+                {
+                    harmony.Patch(tryConvert,
+                        postfix: new HarmonyMethod(typeof(SmqCompat), nameof(TryConvertPostfix)));
+                    KongChengJiLog.Log("patched MonumentMarker_Simple.TryConvert (postfix, diagnostics)");
+                }
+                else
+                {
+                    Log.Warning("[KongChengJi] MonumentMarker_Simple.TryConvert not found!");
+                }
+
+                Log.Message("[KongChengJi] Simple Monument Quest compatibility patched: gizmos + outer-wall sketch swap + live recompute.");
             }
             catch (Exception ex)
             {
                 Log.ErrorOnce("[KongChengJi] failed to patch SMQ compatibility: " + ex, 910020);
             }
+        }
+
+        /// <summary>
+        /// 让 SMQ 按当前草图重新计算材料需求（开关空城计替换草图之后调用）。
+        /// 做法：ResetConstructionCosts 清空已算死的需求 -> 重新 TryConvert（保留玩家已选的材料组）
+        /// -> 若之前已完成选料（converted）则恢复该标记，蓝图/框架的成本是实时读取 MaterialCosts 的，
+        /// 因此重算立即生效。
+        /// </summary>
+        public static bool RecomputeRequirements(MonumentMarker marker)
+        {
+            if (!IsSmqMarker(marker))
+            {
+                return false;
+            }
+            EnsureTypeLoaded();
+            try
+            {
+                bool wasConverted = IsConverted(marker);
+                AccessTools.Method(markerType, "ResetConstructionCosts")?.Invoke(marker, null);
+                bool ok = AccessTools.Method(markerType, "TryConvert")?.Invoke(marker, new object[] { null }) is bool b && b;
+                if (ok && wasConverted && fiConverted != null)
+                {
+                    fiConverted.SetValue(marker, true);
+                }
+                KongChengJiLog.Log("SMQ recompute: marker=" + marker.thingIDNumber
+                    + " wasConverted=" + wasConverted
+                    + " tryConvert=" + ok
+                    + " reqs=[" + DescribeRequirements(marker) + "]");
+                return ok;
+            }
+            catch (Exception ex)
+            {
+                Log.ErrorOnce("[KongChengJi] SMQ recompute failed: " + ex, 910022);
+                return false;
+            }
+        }
+
+        /// <summary>反射读取 SMQ 标记的 requirements / fixedRequirements，拼成可读文本（用于日志）。</summary>
+        private static string DescribeRequirements(MonumentMarker marker)
+        {
+            var sb = new StringBuilder();
+            if (markerType == null)
+            {
+                return "???";
+            }
+            foreach (string fieldName in new[] { "requirements", "fixedRequirements" })
+            {
+                var list = AccessTools.Field(markerType, fieldName)?.GetValue(marker) as System.Collections.IEnumerable;
+                if (list == null)
+                {
+                    continue;
+                }
+                sb.Append(fieldName).Append(":");
+                foreach (object item in list)
+                {
+                    var def = AccessTools.Field(item.GetType(), "thingDef")?.GetValue(item) as ThingDef;
+                    object count = AccessTools.Field(item.GetType(), "count")?.GetValue(item);
+                    sb.Append(def != null ? def.defName : "null").Append("x").Append(count).Append(" ");
+                }
+                sb.Append("| ");
+            }
+            return sb.ToString();
         }
 
         private static void EnsureTypeLoaded()
@@ -137,6 +217,22 @@ namespace PooiKongChengJi
         {
             IEnumerable<Gizmo> extra = KongChengJiGizmos.ForMarker(__instance);
             __result = __result == null ? extra : __result.Concat(extra);
+        }
+
+        /// <summary>诊断日志：SMQ 每次按草图重算材料需求时，记录草图实体数、结果与最终需求。</summary>
+        private static void TryConvertPostfix(MonumentMarker __instance, bool __result)
+        {
+            try
+            {
+                KongChengJiLog.Log("SMQ TryConvert: marker=" + __instance.thingIDNumber
+                    + " sketchEntities=" + (__instance.sketch != null ? __instance.sketch.Entities.Count : -1)
+                    + " result=" + __result
+                    + " reqs=[" + DescribeRequirements(__instance) + "]");
+            }
+            catch (Exception ex)
+            {
+                Log.WarningOnce("[KongChengJi] TryConvert log failed: " + ex, 910023);
+            }
         }
     }
 }

@@ -140,5 +140,5 @@ Fewer materials also mean lower hit points and beauty for the finished monument.
 
 Note: once materials are selected and construction begins, the requirements are locked and Empty Fort mode can no longer be toggled. Confirm?</KCJ_Confirm_Text_SMQ>
 
-  <KCJ_SMQ_Locked>This monument's materials have already been selected and construction is underway; requirements are locked to the current blueprint and Empty Fort mode cannot be toggled. To change it, cancel construction and reinstall the monument marker (which resets material selection).</KCJ_SMQ_Locked>
+  <KCJ_Settings_VerboseLogging>Write verbose debug logs (keep on while troubleshooting Simple Monument Quest compatibility)</KCJ_Settings_VerboseLogging>
 </LanguageData>

@@ -79,7 +79,7 @@
 · 顶罪撤销比例 0%~100%（默认 70%）
 · 纪念碑任务出现概率加成（开关 + 倍率 1x~50x，默认关闭）
 · 宣传仪式刷新概率 0%~100%（默认 100%）
-· Simple Monument Quest 适配：空城计模式下，SMQ 单体纪念碑的任务蓝图会替换为只剩外墙的版本，材料需求只按外墙部分计算（内部结构全部忽略）；选料施工后即锁定，无法再切换
+· Simple Monument Quest 适配：空城计模式下，SMQ 单体纪念碑的任务蓝图会替换为只剩外墙的版本，材料需求只按外墙部分计算（内部结构全部忽略）；开关随时切换、材料实时重算（关=恢复全价）
 
 依赖：Harmony（必需）、Royalty（必需）、Ideology（可选）
 
@@ -115,7 +115,7 @@ A completed monument can hold a Publicity Ritual to refresh a new monument quest
 · Scapegoat revert ratio 0%~100% (default 70%)
 · Monument quest spawn bonus (toggle + multiplier 1x~50x, default off)
 · Publicity ritual refresh chance 0%~100% (default 100%)
-· Simple Monument Quest compatibility: in Empty Fort mode, SMQ's single-tile monument calculates its material requirements from an outer-wall-only blueprint (the interior is ignored); requirements lock once materials are selected
+· Simple Monument Quest compatibility: in Empty Fort mode, SMQ's single-tile monument calculates its material requirements from an outer-wall-only blueprint (the interior is ignored); the toggle works at any time and material costs are recalculated live (off = full price)
 
 Dependencies: Harmony (required), Royalty (required), Ideology (optional)
 

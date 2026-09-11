@@ -144,5 +144,5 @@
 
 注意：选料施工后材料需求即锁定，届时无法再切换空城计。确认开启？</KCJ_Confirm_Text_SMQ>
 
-  <KCJ_SMQ_Locked>该纪念碑已选料施工，材料需求已按当前蓝图锁定，无法切换空城计。如需更改，请先取消施工并重装纪念碑标记（会重置材料选择）。</KCJ_SMQ_Locked>
+  <KCJ_Settings_VerboseLogging>输出详细调试日志（排查 Simple Monument Quest 兼容问题时保持开启）</KCJ_Settings_VerboseLogging>
 </LanguageData>

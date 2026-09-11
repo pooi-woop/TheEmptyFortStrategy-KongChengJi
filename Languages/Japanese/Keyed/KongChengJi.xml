@@ -111,5 +111,5 @@
 
 注意：素材を選んで施工を始めると必要素材は固定され、空城計の切り替えはできなくなります。起動しますか？</KCJ_Confirm_Text_SMQ>
 
-  <KCJ_SMQ_Locked>この記念碑はすでに素材を選択して施工中のため、必要素材は現在の設計図に固定されており、空城計を切り替えられません。変更するには施工を取り消して記念碑マーカーを再設置してください（素材選択がリセットされます）。</KCJ_SMQ_Locked>
+  <KCJ_Settings_VerboseLogging>詳細デバッグログを出力する（Simple Monument Quest 互換の調査時はオンのままにしてください）</KCJ_Settings_VerboseLogging>
 </LanguageData>
