@@ -161,13 +161,17 @@ namespace PooiKongChengJi
             // ---- 空城计切换按钮（仅对未完工且已研究的纪念碑） ----
             if (marker.Spawned && !marker.AllDone && ResearchActive())
             {
+                // SMQ 适配：已选料施工（转换）的纪念碑材料已按当前草图锁定，禁止切换空城计
+                bool smqLocked = SmqCompat.IsSmqMarker(marker) && SmqCompat.IsConverted(marker);
                 yield return new Command_Toggle
                 {
                     icon = KongChengJiAssets.iconText,
                     defaultLabel = "KCJ_Gizmo_Label".Translate(),
                     defaultDesc = "KCJ_Gizmo_Desc".Translate(),
                     isActive = () => comp.IsKongChengJi(marker),
-                    toggleAction = () => comp.Toggle(marker)
+                    toggleAction = () => comp.Toggle(marker),
+                    Disabled = smqLocked,
+                    disabledReason = smqLocked ? "KCJ_SMQ_Locked".Translate() : null
                 };
             }
 
@@ -894,28 +898,18 @@ namespace PooiKongChengJi
 
         public bool IsKongChengJi(MonumentMarker m) => StateFor(m).kongChengJi;
 
-        /// <summary>只读查询：该纪念碑是否开启了空城计（不创建状态条目，供 MaterialCosts 等高频补丁使用）。</summary>
-        public bool IsKongChengJiNoCreate(MonumentMarker m)
-        {
-            if (m == null || states == null)
-            {
-                return false;
-            }
-            int id = m.thingIDNumber;
-            for (int i = 0; i < states.Count; i++)
-            {
-                if (states[i] != null && states[i].id == id)
-                {
-                    return states[i].kongChengJi;
-                }
-            }
-            return false;
-        }
-
         public void Toggle(MonumentMarker m)
         {
             if (m == null || !m.Spawned)
             {
+                return;
+            }
+            // SMQ 适配：材料需求在选料时按当前草图一次性算死。
+            // 若已选料施工后才切换空城计，材料不会跟着变，还会造成"按外墙算料后关掉空城计白嫖"的漏洞，
+            // 因此已转换（选料）的 SMQ 纪念碑锁定切换，直到取消施工/重装标记重置为止。
+            if (SmqCompat.IsSmqMarker(m) && SmqCompat.IsConverted(m))
+            {
+                Messages.Message("KCJ_SMQ_Locked".Translate(), m, MessageTypeDefOf.RejectInput);
                 return;
             }
             var s = StateFor(m);
@@ -936,40 +930,40 @@ namespace PooiKongChengJi
             {
                 return;
             }
-            // SMQ 适配：1x1 单体纪念碑没有"内部/外墙"之分，不替换草图；
-            // 材料打折由 SmqCompat 对 MonumentMarker_Simple.MaterialCosts 的后缀补丁动态生效。
-            if (SmqCompat.IsSmqMarker(m))
-            {
-                s.kongChengJi = true;
-                s.discovered = false;
-                s.lastRollTick = -1;
-                s.isProtected = false;
-                SoundDefOf.Click.PlayOneShotOnCamera();
-                Messages.Message("KCJ_SMQ_Enabled_Message".Translate(SmqCompat.DiscountPercent.ToString("0.#")),
-                    m, MessageTypeDefOf.NeutralEvent);
-                return;
-            }
             if (s.originalSketch == null && m.sketch != null)
             {
                 s.originalSketch = m.sketch.DeepCopy();
             }
             if (s.originalSketch != null)
             {
+                // SMQ 适配：开启空城计同样把草图替换为"只有外墙"的版本。
+                // SMQ 选料时按草图重新计算 1x1 纪念碑的材料需求，于是材料只算外墙部分，内部结构全部忽略。
                 m.sketch = BuildOuterWallSketch(s.originalSketch);
-                DestroyInternalBuildableThings(m, s.originalSketch);
+                // 与原版的差异：不执行 DestroyInternalBuildableThings——
+                // SMQ 的蓝图/框架位于标记原点，可能撞上原草图"内部"实体的格子，不能误删。
+                if (!SmqCompat.IsSmqMarker(m))
+                {
+                    DestroyInternalBuildableThings(m, s.originalSketch);
+                }
             }
             s.kongChengJi = true;
             s.discovered = false;
             s.lastRollTick = -1;
             s.isProtected = false;
             SoundDefOf.Click.PlayOneShotOnCamera();
-            Messages.Message("KCJ_Enabled_Message".Translate(), m, MessageTypeDefOf.NeutralEvent);
+            Messages.Message(
+                SmqCompat.IsSmqMarker(m) ? "KCJ_SMQ_Enabled_Message".Translate() : "KCJ_Enabled_Message".Translate(),
+                m, MessageTypeDefOf.NeutralEvent);
         }
 
         public void Disable(MonumentMarker m, MarkerState s)
         {
-            // SMQ 适配：草图从未被替换，无需还原；折扣随状态关闭自动失效（恢复原价）
-            if (!SmqCompat.IsSmqMarker(m) && m != null && s.originalSketch != null && m.Spawned)
+            if (SmqCompat.IsSmqMarker(m) && SmqCompat.IsConverted(m))
+            {
+                Messages.Message("KCJ_SMQ_Locked".Translate(), m, MessageTypeDefOf.RejectInput);
+                return;
+            }
+            if (m != null && s.originalSketch != null && m.Spawned)
             {
                 m.sketch = s.originalSketch;
             }
@@ -1701,9 +1695,9 @@ namespace PooiKongChengJi
 
             float y = imgRect.yMax + 12f;
             float scrollAreaHeight = inRect.yMax - 40f - y - 8f;
-            // SMQ 适配：单体纪念碑无法省略内部，改为按 SMQ 材料用量打折
+            // SMQ 适配：开启后材料按外墙草图计算，内部结构忽略
             string text = SmqCompat.IsSmqMarker(marker)
-                ? "KCJ_Confirm_Text_SMQ".Translate(SmqCompat.DiscountPercent.ToString("0.#"))
+                ? "KCJ_Confirm_Text_SMQ".Translate()
                 : "KCJ_Confirm_Text".Translate();
             float textHeight = Text.CalcHeight(text, inRect.width - 30f);
 
@@ -1847,16 +1841,6 @@ namespace PooiKongChengJi
             if (settings.propagandaBaseSuccessRate < 0.1f) settings.propagandaBaseSuccessRate = 0.1f;
 
             ls.Gap(16f);
-            if (SmqCompat.Active)
-            {
-                ls.Label("KCJ_Settings_SMQ_Title".Translate());
-                ls.Gap(4f);
-                ls.Label("KCJ_Settings_SMQ_Discount".Translate(SmqCompat.DiscountPercent.ToString("0.#")));
-                settings.smqDiscountPercent = ls.Slider(settings.smqDiscountPercent, 0f, 90f);
-                ls.Label("KCJ_Settings_SMQ_Desc".Translate());
-
-                ls.Gap(16f);
-            }
             ls.Label("KCJ_Settings_Note".Translate());
             ls.End();
 
@@ -1892,9 +1876,6 @@ namespace PooiKongChengJi
         // 空城计-顶罪
         public float blameShiftPercent = 70f;   // 顶罪仪式撤销关系惩罚的比例（默认 70%）
 
-        // SMQ 适配：Simple Monument Quest 纪念碑在空城计模式下的材料减免百分比（默认 50 = 打五折，0 = 不打折）
-        public float smqDiscountPercent = 50f;
-
         public override void ExposeData()
         {
             Scribe_Values.Look(ref discoverChancePercent, "discoverChancePercent", 1f);
@@ -1907,7 +1888,6 @@ namespace PooiKongChengJi
             Scribe_Values.Look(ref propagandaCooldownDays, "propagandaCooldownDays", 5);
             Scribe_Values.Look(ref propagandaBaseSuccessRate, "propagandaBaseSuccessRate", 0.5f);
             Scribe_Values.Look(ref blameShiftPercent, "blameShiftPercent", 70f);
-            Scribe_Values.Look(ref smqDiscountPercent, "smqDiscountPercent", 50f);
         }
     }
 
