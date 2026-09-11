@@ -101,4 +101,16 @@
   <KCJ_Settings_Ritual_Chance>儀式の質が「良好」以上の場合に記念碑クエストを更新する確率: {0}%</KCJ_Settings_Ritual_Chance>
   <KCJ_Settings_Ritual_Tooltip>「空城計 — 宣伝」は文化儀式効果です。儀式に設定後、儀式の質が「良好」以上で終了すると、この確率で新しい記念碑（建設＋保護）クエストが生成されます。\n\nこれは「儀式効果発動」の確率で、デフォルト100%、0%〜100%の間で調整可能です。0%に設定すると、儀式が成功してもクエストは生成されません。\n\n上記の「記念碑クエスト（通常）出現率」とは独立して動作します。上記は通常の記念碑クエストの頻度を調整し、こちらは儀式後に追加で記念碑クエストを得る機会を提供します。</KCJ_Settings_Ritual_Tooltip>
   <KCJ_Settings_Note>注：記念碑の「空城計」ボタンをもう一度クリックすると、このモードを無効にできます。</KCJ_Settings_Note>
+
+  <!-- ===== Simple Monument Quest 互換 ===== -->
+  <KCJ_SMQ_Enabled_Message>空城計を起動：記念碑の必要素材量が {0}% 削減されます（手抜き工事のため、耐久度と美しさも低下します）。完成後の保護期間中は毎日「見破られる」可能性があります。</KCJ_SMQ_Enabled_Message>
+  <KCJ_SMQ_Disabled_Message>空城計を無効化：記念碑の必要素材量が定価に戻りました。</KCJ_SMQ_Disabled_Message>
+  <KCJ_Confirm_Text_SMQ>Simple Monument Quest を検出：この記念碑は1マスの建物で、省ける「外壁」がありません。空城計を有効にすると、クエストから算出された必要素材量が {0}% 割引になります。—— 記念碑を解体して中の素材量を確認する者などいませんから。
+
+手抜き工事は正直にも記念碑の耐久度と美しさに反映されます。さらに完成後の保護期間中は毎日見破られる確率があります：露見すればクエスト失敗、関係悪化です。
+
+空城計モードを起動しますか？</KCJ_Confirm_Text_SMQ>
+  <KCJ_Settings_SMQ_Title>「空城計 × Simple Monument Quest」</KCJ_Settings_SMQ_Title>
+  <KCJ_Settings_SMQ_Discount>空城計モードの素材量割引: -{0}%</KCJ_Settings_SMQ_Discount>
+  <KCJ_Settings_SMQ_Desc>説明：Simple Monument Quest と同時導入時、空城計を有効にした記念碑の必要素材量がこの割合で削減されます（リアルタイム適用、無効化で定価に戻る。割引後の素材量に応じて耐久度と美しさも低下します）。</KCJ_Settings_SMQ_Desc>
 </LanguageData>

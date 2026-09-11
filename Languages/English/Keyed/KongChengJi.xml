@@ -130,4 +130,16 @@
   <KCJ_Settings_Propaganda_Duration_Tooltip>How long the propaganda ceremony lasts (in-game hours). After the ceremony ends, quality is calculated. Default: 2 hours.</KCJ_Settings_Propaganda_Duration_Tooltip>
   <KCJ_Settings_Propaganda_Cooldown>Propaganda ceremony cooldown (days): {0} day(s)</KCJ_Settings_Propaganda_Cooldown>
   <KCJ_Settings_Note>Note: Click the "Empty Fort Strategy" button on the monument again to disable this mode.</KCJ_Settings_Note>
+
+  <!-- ===== Simple Monument Quest compatibility ===== -->
+  <KCJ_SMQ_Enabled_Message>Empty Fort Strategy activated: the monument's material costs are reduced by {0}% (cutting corners also lowers its hit points and beauty). There is still a daily chance of being discovered during the protection period after completion.</KCJ_SMQ_Enabled_Message>
+  <KCJ_SMQ_Disabled_Message>Empty Fort Strategy deactivated: the monument's material costs are restored to full price.</KCJ_SMQ_Disabled_Message>
+  <KCJ_Confirm_Text_SMQ>Simple Monument Quest detected: this monument is a single-tile building with no "outer wall" to skip. With Empty Fort mode enabled, its material costs — as calculated from the quest — are discounted by {0}%. After all, who would tear the monument open to check how much material is really inside?
+
+Cutting corners is honestly reflected in the monument's hit points and beauty. And during the protection period after completion, there is a daily chance of being discovered: once exposed, the quest fails and relations deteriorate.
+
+Confirm activation of Empty Fort mode?</KCJ_Confirm_Text_SMQ>
+  <KCJ_Settings_SMQ_Title>"Empty Fort Strategy x Simple Monument Quest"</KCJ_Settings_SMQ_Title>
+  <KCJ_Settings_SMQ_Discount>Material cost discount in Empty Fort mode: -{0}%</KCJ_Settings_SMQ_Discount>
+  <KCJ_Settings_SMQ_Desc>Note: With Simple Monument Quest installed, monuments in Empty Fort mode have their quest-calculated material costs reduced by this percentage (applied live; disabling the mode restores full price; discounted materials lower the monument's HP and beauty).</KCJ_Settings_SMQ_Desc>
 </LanguageData>

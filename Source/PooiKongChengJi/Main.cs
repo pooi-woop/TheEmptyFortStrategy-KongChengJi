@@ -34,7 +34,11 @@ namespace PooiKongChengJi
         static KongChengJiAssets()
         {
             // 注册所有 [HarmonyPatch]（纪念碑 Gizmo 切换按钮等），否则补丁永远不会生效
-            new Harmony("pooiwoop.kongchengji").PatchAll(Assembly.GetExecutingAssembly());
+            var harmony = new Harmony("pooiwoop.kongchengji");
+            harmony.PatchAll(Assembly.GetExecutingAssembly());
+            // Simple Monument Quest 适配：SMQ 重写了 MonumentMarker.GetGizmos（不调用基类），
+            // 需要额外给 MonumentMarker_Simple.GetGizmos / MaterialCosts 打补丁
+            SmqCompat.ApplyPatches(harmony);
             try
             {
                 iconText = MakeIcon();
@@ -127,30 +131,50 @@ namespace PooiKongChengJi
             {
                 yield return gizmo;
             }
+            foreach (Gizmo gizmo in KongChengJiGizmos.ForMarker(__instance))
+            {
+                yield return gizmo;
+            }
+        }
 
+        private static bool ResearchActive()
+        {
+            var proj = DefDatabase<ResearchProjectDef>.GetNamedSilentFail("KCJ_EmptyCityStrategy");
+            return proj != null && proj.IsFinished;
+        }
+    }
+
+    /// <summary>
+    /// 空城计 Gizmo 的共享生成逻辑：原版纪念碑补丁与 SMQ(MonumentMarker_Simple) 补丁共用，
+    /// 包含空城计切换、顶罪仪式、宣传仪式三个按钮。
+    /// </summary>
+    internal static class KongChengJiGizmos
+    {
+        public static IEnumerable<Gizmo> ForMarker(MonumentMarker marker)
+        {
             var comp = Current.Game?.GetComponent<GameComponent_KongChengJi>();
-            if (comp == null)
+            if (comp == null || marker == null)
             {
                 yield break;
             }
 
             // ---- 空城计切换按钮（仅对未完工且已研究的纪念碑） ----
-            if (__instance != null && __instance.Spawned && !__instance.AllDone && ResearchActive())
+            if (marker.Spawned && !marker.AllDone && ResearchActive())
             {
                 yield return new Command_Toggle
                 {
                     icon = KongChengJiAssets.iconText,
                     defaultLabel = "KCJ_Gizmo_Label".Translate(),
                     defaultDesc = "KCJ_Gizmo_Desc".Translate(),
-                    isActive = () => comp.IsKongChengJi(__instance),
-                    toggleAction = () => comp.Toggle(__instance)
+                    isActive = () => comp.IsKongChengJi(marker),
+                    toggleAction = () => comp.Toggle(marker)
                 };
             }
 
             // ---- 顶罪仪式按钮（被看穿后自动出现，无需文化配置） ----
-            if (__instance != null && __instance.Spawned && __instance.questTags != null && __instance.questTags.Count > 0)
+            if (marker.Spawned && marker.questTags != null && marker.questTags.Count > 0)
             {
-                string questTag = __instance.questTags[0];
+                string questTag = marker.questTags[0];
                 ExposureEvent ev = comp.FindActiveExposureForQuestTag(questTag);
                 if (ev != null)
                 {
@@ -168,7 +192,7 @@ namespace PooiKongChengJi
             }
 
             // ---- 宣传仪式按钮（研究完成后自动出现，手动刷新纪念碑任务，无需文化配置） ----
-            if (__instance != null && __instance.Spawned && ResearchActive())
+            if (marker.Spawned && ResearchActive())
             {
                 bool onCooldown = comp.IsPropagandaOnCooldown;
                 bool ceremonyRunning = comp.IsCeremonyRunning;
@@ -221,7 +245,7 @@ namespace PooiKongChengJi
                         defaultDesc = desc,
                         action = () =>
                         {
-                            Find.WindowStack.Add(new Dialog_PropagandaCeremony(__instance, comp));
+                            Find.WindowStack.Add(new Dialog_PropagandaCeremony(marker, comp));
                         }
                     };
                 }
@@ -870,6 +894,24 @@ namespace PooiKongChengJi
 
         public bool IsKongChengJi(MonumentMarker m) => StateFor(m).kongChengJi;
 
+        /// <summary>只读查询：该纪念碑是否开启了空城计（不创建状态条目，供 MaterialCosts 等高频补丁使用）。</summary>
+        public bool IsKongChengJiNoCreate(MonumentMarker m)
+        {
+            if (m == null || states == null)
+            {
+                return false;
+            }
+            int id = m.thingIDNumber;
+            for (int i = 0; i < states.Count; i++)
+            {
+                if (states[i] != null && states[i].id == id)
+                {
+                    return states[i].kongChengJi;
+                }
+            }
+            return false;
+        }
+
         public void Toggle(MonumentMarker m)
         {
             if (m == null || !m.Spawned)
@@ -894,6 +936,19 @@ namespace PooiKongChengJi
             {
                 return;
             }
+            // SMQ 适配：1x1 单体纪念碑没有"内部/外墙"之分，不替换草图；
+            // 材料打折由 SmqCompat 对 MonumentMarker_Simple.MaterialCosts 的后缀补丁动态生效。
+            if (SmqCompat.IsSmqMarker(m))
+            {
+                s.kongChengJi = true;
+                s.discovered = false;
+                s.lastRollTick = -1;
+                s.isProtected = false;
+                SoundDefOf.Click.PlayOneShotOnCamera();
+                Messages.Message("KCJ_SMQ_Enabled_Message".Translate(SmqCompat.DiscountPercent.ToString("0.#")),
+                    m, MessageTypeDefOf.NeutralEvent);
+                return;
+            }
             if (s.originalSketch == null && m.sketch != null)
             {
                 s.originalSketch = m.sketch.DeepCopy();
@@ -913,13 +968,16 @@ namespace PooiKongChengJi
 
         public void Disable(MonumentMarker m, MarkerState s)
         {
-            if (m != null && s.originalSketch != null && m.Spawned)
+            // SMQ 适配：草图从未被替换，无需还原；折扣随状态关闭自动失效（恢复原价）
+            if (!SmqCompat.IsSmqMarker(m) && m != null && s.originalSketch != null && m.Spawned)
             {
                 m.sketch = s.originalSketch;
             }
             s.kongChengJi = false;
             SoundDefOf.Click.PlayOneShotOnCamera();
-            Messages.Message("KCJ_Disabled_Message".Translate(), m, MessageTypeDefOf.NeutralEvent);
+            Messages.Message(
+                SmqCompat.IsSmqMarker(m) ? "KCJ_SMQ_Disabled_Message".Translate() : "KCJ_Disabled_Message".Translate(),
+                m, MessageTypeDefOf.NeutralEvent);
         }
 
         // ---------- 每日发现判定 ----------
@@ -1643,7 +1701,10 @@ namespace PooiKongChengJi
 
             float y = imgRect.yMax + 12f;
             float scrollAreaHeight = inRect.yMax - 40f - y - 8f;
-            string text = "KCJ_Confirm_Text".Translate();
+            // SMQ 适配：单体纪念碑无法省略内部，改为按 SMQ 材料用量打折
+            string text = SmqCompat.IsSmqMarker(marker)
+                ? "KCJ_Confirm_Text_SMQ".Translate(SmqCompat.DiscountPercent.ToString("0.#"))
+                : "KCJ_Confirm_Text".Translate();
             float textHeight = Text.CalcHeight(text, inRect.width - 30f);
 
             Rect outRect = new Rect(inRect.x, y, inRect.width - 4f, scrollAreaHeight);
@@ -1786,6 +1847,16 @@ namespace PooiKongChengJi
             if (settings.propagandaBaseSuccessRate < 0.1f) settings.propagandaBaseSuccessRate = 0.1f;
 
             ls.Gap(16f);
+            if (SmqCompat.Active)
+            {
+                ls.Label("KCJ_Settings_SMQ_Title".Translate());
+                ls.Gap(4f);
+                ls.Label("KCJ_Settings_SMQ_Discount".Translate(SmqCompat.DiscountPercent.ToString("0.#")));
+                settings.smqDiscountPercent = ls.Slider(settings.smqDiscountPercent, 0f, 90f);
+                ls.Label("KCJ_Settings_SMQ_Desc".Translate());
+
+                ls.Gap(16f);
+            }
             ls.Label("KCJ_Settings_Note".Translate());
             ls.End();
 
@@ -1821,6 +1892,9 @@ namespace PooiKongChengJi
         // 空城计-顶罪
         public float blameShiftPercent = 70f;   // 顶罪仪式撤销关系惩罚的比例（默认 70%）
 
+        // SMQ 适配：Simple Monument Quest 纪念碑在空城计模式下的材料减免百分比（默认 50 = 打五折，0 = 不打折）
+        public float smqDiscountPercent = 50f;
+
         public override void ExposeData()
         {
             Scribe_Values.Look(ref discoverChancePercent, "discoverChancePercent", 1f);
@@ -1833,6 +1907,7 @@ namespace PooiKongChengJi
             Scribe_Values.Look(ref propagandaCooldownDays, "propagandaCooldownDays", 5);
             Scribe_Values.Look(ref propagandaBaseSuccessRate, "propagandaBaseSuccessRate", 0.5f);
             Scribe_Values.Look(ref blameShiftPercent, "blameShiftPercent", 70f);
+            Scribe_Values.Look(ref smqDiscountPercent, "smqDiscountPercent", 50f);
         }
     }
 

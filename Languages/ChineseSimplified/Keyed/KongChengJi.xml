@@ -134,4 +134,16 @@
   <KCJ_Settings_Propaganda_Cooldown>宣传仪式冷却天数: {0} 天</KCJ_Settings_Propaganda_Cooldown>
   <KCJ_Settings_Propaganda_BaseSuccessRate>宣传仪式基础成功率: {0}%</KCJ_Settings_Propaganda_BaseSuccessRate>
   <KCJ_Settings_Note>说明：默认再次点击纪念碑的「空城计」按钮即可关闭本模式。</KCJ_Settings_Note>
+
+  <!-- ===== Simple Monument Quest 适配 ===== -->
+  <KCJ_SMQ_Enabled_Message>空城计已开启：纪念碑材料用量减少 {0}%（偷工减料，血量与美观度也会相应降低）。建成后的保护期内每天仍有概率被看穿。</KCJ_SMQ_Enabled_Message>
+  <KCJ_SMQ_Disabled_Message>空城计已关闭：纪念碑材料用量恢复原价。</KCJ_SMQ_Disabled_Message>
+  <KCJ_Confirm_Text_SMQ>检测到 Simple Monument Quest：这座纪念碑是单体建筑，没有「外墙」可省。开启空城计后，将按任务计算出的材料用量直接减少 {0}%——毕竟谁会拆开纪念碑检查里面砌了多少料呢？
+
+偷工减料会如实反映在纪念碑的血量与美观度上。且建成后的保护期内，每天都有概率被看穿：一旦露馅任务失败、关系恶化。
+
+确认开启空城计模式？</KCJ_Confirm_Text_SMQ>
+  <KCJ_Settings_SMQ_Title>「空城计 × Simple Monument Quest」</KCJ_Settings_SMQ_Title>
+  <KCJ_Settings_SMQ_Discount>空城计模式材料用量减免: {0}%</KCJ_Settings_SMQ_Discount>
+  <KCJ_Settings_SMQ_Desc>说明：同时安装 Simple Monument Quest 时，开启空城计的纪念碑会按此比例减少任务所需的材料用量（折扣实时生效，关闭空城计即恢复原价；折后材料会降低纪念碑血量与美观度）。</KCJ_Settings_SMQ_Desc>
 </LanguageData>
