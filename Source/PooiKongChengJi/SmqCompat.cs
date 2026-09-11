@@ -28,7 +28,6 @@ namespace PooiKongChengJi
     /// </summary>
     public static class SmqCompat
     {
-        private const string SmqPackageId = "ZuoYao.SimpleMonumentQuest";
         private const string MarkerTypeName = "ZuoYao.SimpleMonumentQuest.MonumentMarker_Simple";
 
         private static bool? active;
@@ -37,14 +36,20 @@ namespace PooiKongChengJi
         private static Type markerType;
         private static FieldInfo fiConverted;
 
-        /// <summary>SMQ 是否已启用（结果缓存）。</summary>
+        /// <summary>SMQ 是否已启用（结果缓存）。
+        /// 注意：不能用 ModLister.GetActiveModWithIdentifier 判断——ModsConfig.IsActive 依赖
+        /// activeModsHashSet（存原始字符串、大小写敏感），若 ModsConfig.xml 里 packageId
+        /// 大小写与注册的不一致，mod 内容会照常加载（加载路径大小写不敏感）但 Active 会误判
+        /// 为 false。而 SMQ 的程序集只有在 mod 真正启用时才会加载，因此"类型已加载"才是唯一
+        /// 可靠的信号。</summary>
         public static bool Active
         {
             get
             {
                 if (active == null)
                 {
-                    active = ModLister.GetActiveModWithIdentifier(SmqPackageId) != null;
+                    EnsureTypeLoaded();
+                    active = markerType != null;
                 }
                 return active.Value;
             }
@@ -89,7 +94,7 @@ namespace PooiKongChengJi
             }
         }
 
-        /// <summary>在空城计静态启动时调用：若 SMQ 已启用，则给 SMQ 的方法打补丁。</summary>
+        /// <summary>在空城计静态启动时调用：若检测到 SMQ（其程序集已加载），则给 SMQ 的方法打补丁。</summary>
         public static void ApplyPatches(Harmony harmony)
         {
             if (!Active || patched || harmony == null)
@@ -99,7 +104,6 @@ namespace PooiKongChengJi
             patched = true;
             try
             {
-                EnsureTypeLoaded();
                 if (markerType == null)
                 {
                     Log.Warning("[KongChengJi] SMQ detected but MonumentMarker_Simple not found; compatibility disabled.");
