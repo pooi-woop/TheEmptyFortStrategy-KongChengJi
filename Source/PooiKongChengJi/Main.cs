@@ -1132,10 +1132,21 @@ namespace PooiKongChengJi
                         continue;
                     }
                     MonumentMarker m = FindMarkerById(s.id);
-                    if (m == null || m.Destroyed || m.complete)
+                    if (m == null || m.Destroyed)
                     {
                         KongChengJiLog.Log("State cleanup: removed state for marker=" + s.id
-                            + " (marker " + (m == null ? "gone" : m.Destroyed ? "destroyed" : "complete") + ")");
+                            + " (marker " + (m == null ? "gone" : "destroyed") + ")");
+                        states.RemoveAt(i);
+                        continue;
+                    }
+                    // 注意：完工（complete）绝不能作为清除条件——保护期的每日看破掷骰、
+                    // isProtected 被拆失败判定都发生在完工之后，状态必须存活。
+                    // 这里只清除"完工但从未进入保护期"的状态（完工瞬间任务已结束，
+                    // isProtected 永远不会被置位，属于死状态）。
+                    if (m.complete && !s.isProtected)
+                    {
+                        KongChengJiLog.Log("State cleanup: removed state for marker=" + s.id
+                            + " (complete but never protected)");
                         states.RemoveAt(i);
                     }
                 }

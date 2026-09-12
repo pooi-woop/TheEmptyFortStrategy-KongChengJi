@@ -152,14 +152,27 @@ namespace PooiKongChengJi
             {
                 bool wasConverted = IsConverted(marker);
                 AccessTools.Method(markerType, "ResetConstructionCosts")?.Invoke(marker, null);
+                // 未选料时必须清空建造组：ResetConstructionCosts 只清各组需求，不清组列表本身；
+                // 而 TryConvert 见组已存在就跳过 CreateConstructionGroups，组里缓存的
+                // stuffVolumeCount（选料面板显示的材料量）仍是旧草图的全价值，面板于是永远全价。
+                // 清空后 TryConvert 会按当前（外墙/还原后）草图重建组，面板数字立即随开关刷新。
+                // 已选料（converted）时不能清：重建会丢已选材料且 TryConvert 直接失败。
+                if (!wasConverted)
+                {
+                    (AccessTools.Field(markerType, "constructionGroups")?.GetValue(marker)
+                        as System.Collections.IList)?.Clear();
+                }
                 bool ok = AccessTools.Method(markerType, "TryConvert")?.Invoke(marker, new object[] { null }) is bool b && b;
                 if (ok && wasConverted && fiConverted != null)
                 {
                     fiConverted.SetValue(marker, true);
                 }
+                var groups = AccessTools.Field(markerType, "constructionGroups")?.GetValue(marker)
+                    as System.Collections.IList;
                 KongChengJiLog.Log("SMQ recompute: marker=" + marker.thingIDNumber
                     + " wasConverted=" + wasConverted
                     + " tryConvert=" + ok
+                    + " groups=" + (groups != null ? groups.Count.ToString() : "?")
                     + " reqs=[" + DescribeRequirements(marker) + "]");
                 return ok;
             }
