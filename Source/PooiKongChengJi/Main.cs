@@ -1038,9 +1038,17 @@ namespace PooiKongChengJi
             }
         }
 
+        // 每 tick 只做轻量任务（仪式进度、袭击倒计时、Lord 清理），
+        // 高开销的全任务扫描与状态清理节流为低频定时执行，避免每 tick
+        // （最高可达约 180 次/秒 的 GameComponentTick 调用）都遍历整个任务列表
+        // 造成额外的性能损耗（反馈者所说的"检测频率太高很吃性能"即源于此）。
+        // 掷骰按天（60000 tick）、清理本就低频，此间隔只让其最多延后数 tick，不改变任何判定结果。
+        private const int QuestScanInterval = 500;
+        private int nextScanTick;
+
         private void TickCore()
         {
-            // 宣传仪式 tick：检查仪式是否完成
+            // 宣传仪式 tick：检查仪式是否完成（无仪式时直接返回，开销可忽略）
             TickCeremony();
 
             // 安全清理：如果 Lord 存在但仪式已结束，清理 Lord
@@ -1055,7 +1063,7 @@ namespace PooiKongChengJi
                 propagandaLord = null;
             }
 
-            // 研究完成时下发双倍点数纪念碑任务
+            // 研究完成时下发双倍点数纪念碑任务（一次性）
             if (!researchCompletedQuestDispatched)
             {
                 var proj = DefDatabase<ResearchProjectDef>.GetNamedSilentFail("KCJ_EmptyCityStrategy");
@@ -1065,6 +1073,23 @@ namespace PooiKongChengJi
                     TryDispatchResearchMonumentQuest();
                 }
             }
+
+            // 延迟袭击判定（exposures 为空时立即返回，开销可忽略）
+            TickDelayedAttacks();
+
+            // 高频扫描节流：全任务遍历 + 每日掷骰 + 状态清理，每 QuestScanInterval tick 做一次
+            TickPeriodicScan();
+        }
+
+        /// <summary>低频全任务扫描与状态清理（节流见 QuestScanInterval），避免每 tick 全量遍历任务列表。</summary>
+        private void TickPeriodicScan()
+        {
+            int now = Find.TickManager.TicksGame;
+            if (now < nextScanTick)
+            {
+                return;
+            }
+            nextScanTick = now + QuestScanInterval;
 
             List<Quest> quests = Find.QuestManager.QuestsListForReading;
             if (quests == null)
@@ -1121,42 +1146,33 @@ namespace PooiKongChengJi
             // 会把状态洗掉，而草图仍处于"外墙替换态"，之后开关显示"关"、重新选料却按外墙计算；
             // 更糟的是此时再开空城计会把外墙草图当"原图"存下来，完整蓝图永久丢失（实测踩坑）。
             // 现在只要标记还存在、未完工且模式开着，状态一律保留。
-            if (Find.TickManager.TicksGame % 120 == 0)
+            for (int i = states.Count - 1; i >= 0; i--)
             {
-                for (int i = states.Count - 1; i >= 0; i--)
+                MarkerState s = states[i];
+                if (s == null || !s.kongChengJi || s.discovered)
                 {
-                    MarkerState s = states[i];
-                    if (s == null || !s.kongChengJi || s.discovered)
-                    {
-                        states.RemoveAt(i);
-                        continue;
-                    }
-                    MonumentMarker m = FindMarkerById(s.id);
-                    if (m == null || m.Destroyed)
-                    {
-                        KongChengJiLog.Log("State cleanup: removed state for marker=" + s.id
-                            + " (marker " + (m == null ? "gone" : "destroyed") + ")");
-                        states.RemoveAt(i);
-                        continue;
-                    }
-                    // 注意：完工（complete）绝不能作为清除条件——保护期的每日看破掷骰、
-                    // isProtected 被拆失败判定都发生在完工之后，状态必须存活。
-                    // 这里只清除"完工但从未进入保护期"的状态（完工瞬间任务已结束，
-                    // isProtected 永远不会被置位，属于死状态）。
-                    if (m.complete && !s.isProtected)
-                    {
-                        KongChengJiLog.Log("State cleanup: removed state for marker=" + s.id
-                            + " (complete but never protected)");
-                        states.RemoveAt(i);
-                    }
+                    states.RemoveAt(i);
+                    continue;
+                }
+                MonumentMarker m = FindMarkerById(s.id);
+                if (m == null || m.Destroyed)
+                {
+                    KongChengJiLog.Log("State cleanup: removed state for marker=" + s.id
+                        + " (marker " + (m == null ? "gone" : "destroyed") + ")");
+                    states.RemoveAt(i);
+                    continue;
+                }
+                // 注意：完工（complete）绝不能作为清除条件——保护期的每日看破掷骰、
+                // isProtected 被拆失败判定都发生在完工之后，状态必须存活。
+                // 这里只清除"完工但从未进入保护期"的状态（完工瞬间任务已结束，
+                // isProtected 永远不会被置位，属于死状态）。
+                if (m.complete && !s.isProtected)
+                {
+                    KongChengJiLog.Log("State cleanup: removed state for marker=" + s.id
+                        + " (complete but never protected)");
+                    states.RemoveAt(i);
                 }
             }
-
-            // ---------- 宣传仪式 tick ----------
-            TickCeremony();
-
-            // ---------- 延迟袭击判定 ----------
-            TickDelayedAttacks();
         }
 
         /// <summary>宣传仪式进度 tick：检查仪式是否到时间完成。</summary>
